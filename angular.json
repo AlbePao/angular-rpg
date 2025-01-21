@@ -5,7 +5,39 @@
   "projects": {
     "angular-rpg": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "inlineTemplate": true,
+          "changeDetection": "OnPush",
+          "style": "none",
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "functional": true,
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "functional": true,
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "functional": true,
+          "skipTests": true
+        },
+        "@schematics/angular:application": {
+          "strict": true,
+          "skipTests": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -13,6 +45,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "clearScreen": true,
             "outputPath": "dist/angular-rpg",
             "index": "src/index.html",
             "browser": "src/main.ts",

@@ -12,13 +12,5 @@
   "insertPragma": false,
   "endOfLine": "auto",
   "proseWrap": "preserve",
-  "overrides": [
-    {
-      "files": "*.html",
-      "options": {
-        "parser": "angular"
-      }
-    }
-  ],
   "plugins": ["prettier-plugin-organize-imports"]
 }

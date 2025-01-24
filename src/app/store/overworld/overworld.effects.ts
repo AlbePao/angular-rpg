@@ -1,53 +1,51 @@
 import { inject } from '@angular/core';
-import { GameContainerService } from '@lib/services/game-container.service';
+import { DEFAULT_PERSON_ANIMATIONS } from '@lib/constants/person-animations';
+import { GameContainer } from '@lib/services/game-container.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { GameObjectsActions } from '@store/game-objects/game-objects.actions';
 import { tap } from 'rxjs';
 import { OverworldActions } from './overworld.actions';
 
-const overworldInit$ = createEffect(
-  (actions$ = inject(Actions), gameContainerService = inject(GameContainerService)) => {
+export const initOverworld$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const gameContainer = inject(GameContainer);
+    const store = inject(Store);
+
     return actions$.pipe(
       ofType(OverworldActions.init),
       tap(() => {
-        const { gameCanvasContext } = gameContainerService.containers;
+        const { gameCanvasContext } = gameContainer.containers;
 
         const image = new Image();
         image.onload = () => gameCanvasContext.drawImage(image, 0, 0);
         image.src = '/images/maps/DemoLower.png';
 
-        const x = 5;
-        const y = 6;
-
-        const shadow = new Image();
-        shadow.onload = () =>
-          gameCanvasContext.drawImage(
-            shadow,
-            0, //left cut
-            0, //top cut,
-            32, //width of cut
-            32, //height of cut
-            x * 16 - 8,
-            y * 16 - 18,
-            32,
-            32,
-          );
-
-        shadow.src = '/images/characters/shadow.png';
-
-        const hero = new Image();
-        hero.onload = () =>
-          gameCanvasContext.drawImage(
-            hero,
-            0, //left cut
-            0, //top cut,
-            32, //width of cut
-            32, //height of cut
-            x * 16 - 8,
-            y * 16 - 18,
-            32,
-            32,
-          );
-        hero.src = '/images/characters/people/hero.png';
+        store.dispatch(
+          GameObjectsActions.setGameObjects({
+            gameObjects: {
+              hero: {
+                x: 5,
+                y: 6,
+                src: '/images/characters/people/hero.png',
+                hasShadow: true,
+                animations: DEFAULT_PERSON_ANIMATIONS,
+                currentAnimation: 'idleDown',
+                currentAnimationFrame: 0,
+              },
+              beth: {
+                x: 7,
+                y: 9,
+                src: '/images/characters/people/npc1.png',
+                hasShadow: true,
+                animations: DEFAULT_PERSON_ANIMATIONS,
+                currentAnimation: 'idleDown',
+                currentAnimationFrame: 0,
+              },
+            },
+          }),
+        );
       }),
     );
   },
@@ -55,5 +53,5 @@ const overworldInit$ = createEffect(
 );
 
 export const OverworldEffects = {
-  overworldInit$,
+  initOverworld$,
 };

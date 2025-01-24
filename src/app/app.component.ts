@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
-import { GameContainerService } from './lib/services/game-container.service';
+import { GameContainer } from '@lib/services/game-container.service';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +12,19 @@ import { GameContainerService } from './lib/services/game-container.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements AfterViewInit {
-  private readonly _containerHandlerService = inject(GameContainerService);
+  private readonly _gameContainer = inject(GameContainer);
+
   gameContainer = viewChild<ElementRef<HTMLDivElement>>('gameContainer');
   gameCanvas = viewChild<ElementRef<HTMLCanvasElement>>('gameCanvas');
 
   ngAfterViewInit(): void {
-    this._containerHandlerService.init({
-      gameContainer: this.gameContainer()?.nativeElement,
-      gameCanvas: this.gameCanvas()?.nativeElement,
-    });
+    const gameContainer = this.gameContainer()?.nativeElement;
+    const gameCanvas = this.gameCanvas()?.nativeElement;
+
+    if (!gameContainer || !gameCanvas) {
+      throw new Error('Game container or game canvas not found');
+    }
+
+    this._gameContainer.init({ gameContainer, gameCanvas });
   }
 }

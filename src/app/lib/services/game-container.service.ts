@@ -14,7 +14,7 @@ type GameContainers = GameContainerConfig & {
 @Injectable({
   providedIn: 'root',
 })
-export class GameContainerService {
+export class GameContainer {
   private readonly _store = inject(Store);
 
   get containers(): GameContainers {
@@ -22,15 +22,7 @@ export class GameContainerService {
   }
   private _containers!: GameContainers;
 
-  init({ gameContainer, gameCanvas }: Partial<GameContainerConfig>): void {
-    if (!gameContainer) {
-      throw new Error('Game container not found');
-    }
-
-    if (!gameCanvas) {
-      throw new Error('Game canvas not found');
-    }
-
+  init({ gameContainer, gameCanvas }: GameContainerConfig): void {
     const gameCanvasContext = gameCanvas.getContext('2d');
 
     if (!gameCanvasContext) {

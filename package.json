@@ -32,6 +32,7 @@
     "@angular/cli": "^19.0.7",
     "@angular/compiler-cli": "^19.0.0",
     "@ngrx/eslint-plugin": "^19.0.0",
+    "@total-typescript/ts-reset": "^0.6.1",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "19.0.2",
     "eslint": "^9.16.0",

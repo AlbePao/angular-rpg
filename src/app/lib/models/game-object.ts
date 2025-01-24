@@ -21,3 +21,5 @@ export interface GameObject {
   currentAnimation: PersonAnimations;
   currentAnimationFrame: number;
 }
+
+export type GameObjects = Record<string, GameObject>;

@@ -37,4 +37,9 @@ export class GameContainer {
 
     this._store.dispatch(OverworldActions.init());
   }
+
+  clearCanvas(): void {
+    const { gameCanvasContext, gameCanvas } = this._containers;
+    gameCanvasContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+  }
 }

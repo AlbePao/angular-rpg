@@ -10,9 +10,9 @@ const initialState: OverworldFeatureState = {
   foo: null,
 };
 
-export const OverworldReducer = createReducer(initialState);
+export const overworldReducer = createReducer(initialState);
 
-export const settingFeature = createFeature({
+export const overworldFeature = createFeature({
   name: OverworldFeatureKey,
-  reducer: OverworldReducer,
+  reducer: overworldReducer,
 });

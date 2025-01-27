@@ -9,6 +9,7 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
     upperSrc: '/images/maps/DemoUpper.png',
     gameObjects: {
       hero: {
+        id: 'hero',
         x: 5,
         y: 6,
         src: '/images/characters/people/hero.png',
@@ -18,6 +19,7 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
       },
       npc1: {
+        id: 'npc1',
         x: 7,
         y: 9,
         src: '/images/characters/people/npc1.png',
@@ -34,6 +36,7 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
     upperSrc: '/images/maps/KitchenUpper.png',
     gameObjects: {
       hero: {
+        id: 'hero',
         x: 3,
         y: 5,
         src: '/images/characters/people/hero.png',
@@ -43,6 +46,7 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
       },
       npcA: {
+        id: 'npcA',
         x: 9,
         y: 6,
         src: '/images/characters/people/npc2.png',
@@ -52,6 +56,7 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
       },
       npcB: {
+        id: 'npcB',
         x: 10,
         y: 8,
         src: '/images/characters/people/npc3.png',

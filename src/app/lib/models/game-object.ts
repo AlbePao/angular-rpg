@@ -13,6 +13,7 @@ export type PersonAnimationsMap = Record<PersonAnimations, [number, number][]>;
 export type ObjectAnimations = 'usedDown' | 'unusedDown';
 
 export interface GameObject {
+  id: string;
   x: number;
   y: number;
   src: string;

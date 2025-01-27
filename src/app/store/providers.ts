@@ -29,7 +29,7 @@ export const STORE_PROVIDERS = [
     logOnly: !isDevMode(),
   }),
   provideEffects([
-    //functional effects
+    // Functional effects
     OverworldEffects,
     GameObjectsEffects,
     OverworldMapEffects,

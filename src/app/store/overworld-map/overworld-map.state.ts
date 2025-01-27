@@ -1,5 +1,5 @@
 import { OverWorldMaps } from '@lib/models/overworld-map';
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import { OverworldMapActions } from './overworld-map.actions';
 
 export const OverworldMapFeatureKey = 'OverworldMap';
@@ -27,8 +27,3 @@ export const overworldMapReducer = createReducer(
     (state, { currentMapId }): OverworldMapFeatureState => ({ ...state, currentMapId }),
   ),
 );
-
-export const overworldMapFeature = createFeature({
-  name: OverworldMapFeatureKey,
-  reducer: overworldMapReducer,
-});

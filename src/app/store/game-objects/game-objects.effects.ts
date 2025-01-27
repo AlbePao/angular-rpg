@@ -8,10 +8,7 @@ import { GameObjectsActions } from './game-objects.actions';
 import { selectGameObjects } from './game-objects.selectors';
 
 export const setGameObjects$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const gameContainer = inject(GameContainer);
-
+  (actions$ = inject(Actions), gameContainer = inject(GameContainer)) => {
     return actions$.pipe(
       ofType(GameObjectsActions.setGameObjects),
       tap(({ gameObjects }) =>
@@ -23,11 +20,7 @@ export const setGameObjects$ = createEffect(
 );
 
 export const drawGameObjects$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const gameContainer = inject(GameContainer);
-    const store = inject(Store);
-
+  (actions$ = inject(Actions), gameContainer = inject(GameContainer), store = inject(Store)) => {
     return actions$.pipe(
       ofType(GameObjectsActions.drawGameObjects),
       concatLatestFrom(() => store.select(selectGameObjects)),

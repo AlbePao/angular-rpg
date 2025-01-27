@@ -10,10 +10,7 @@ import { tap } from 'rxjs';
 import { OverworldActions } from './overworld.actions';
 
 export const initOverworld$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const store = inject(Store);
-
+  (actions$ = inject(Actions), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldActions.init),
       tap(() => store.dispatch(OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'Kitchen' }))),
@@ -23,12 +20,12 @@ export const initOverworld$ = createEffect(
 );
 
 export const startGameLoop$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const gameContainer = inject(GameContainer);
-    const store = inject(Store);
-    const window = inject(WINDOW);
-
+  (
+    actions$ = inject(Actions),
+    gameContainer = inject(GameContainer),
+    store = inject(Store),
+    window = inject(WINDOW),
+  ) => {
     return actions$.pipe(
       ofType(OverworldActions.startGameLoop),
       tap(() => {

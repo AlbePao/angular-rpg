@@ -1,5 +1,5 @@
 import { GameObjects } from '@lib/models/game-object';
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import { GameObjectsActions } from './game-objects.actions';
 
 export const GameObjectsFeatureKey = 'GameObjects';
@@ -16,8 +16,3 @@ export const gameObjectsReducer = createReducer(
     (state, { gameObjects }): GameObjectsFeatureState => ({ ...state, ...gameObjects }),
   ),
 );
-
-export const gameObjectsFeature = createFeature({
-  name: GameObjectsFeatureKey,
-  reducer: gameObjectsReducer,
-});

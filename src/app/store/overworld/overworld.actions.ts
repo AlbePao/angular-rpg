@@ -5,5 +5,6 @@ export const OverworldActions = createActionGroup({
   events: {
     init: emptyProps(),
     startGameLoop: emptyProps(),
+    gameLoopStep: emptyProps(),
   },
 });

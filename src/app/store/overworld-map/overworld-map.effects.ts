@@ -10,10 +10,7 @@ import { OverworldMapActions } from './overworld-map.actions';
 import { selectOverworldMaps } from './overworld-map.selectors';
 
 export const initOverworldMaps$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const store = inject(Store);
-
+  (actions$ = inject(Actions), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.init),
       tap(() => store.dispatch(OverworldActions.startGameLoop())),
@@ -23,11 +20,7 @@ export const initOverworldMaps$ = createEffect(
 );
 
 export const setCurrentMap$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const gameContainer = inject(GameContainer);
-    const store = inject(Store);
-
+  (actions$ = inject(Actions), gameContainer = inject(GameContainer), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.init, OverworldMapActions.setCurrentMap),
       concatLatestFrom(() => store.select(selectOverworldMaps)),
@@ -52,10 +45,7 @@ export const setCurrentMap$ = createEffect(
 );
 
 export const drawCurrentMap$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const gameContainer = inject(GameContainer);
-
+  (actions$ = inject(Actions), gameContainer = inject(GameContainer)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.drawCurrentMap),
       tap(() => gameContainer.drawMapImage()),

@@ -1,10 +1,10 @@
-import { GameObject } from '@lib/models/game-object';
-import { createActionGroup, props } from '@ngrx/store';
+import { GameObjects } from '@lib/models/game-object';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 
 export const GameObjectsActions = createActionGroup({
   source: 'GameObjects',
   events: {
-    setGameObjects: props<{ gameObjects: Record<string, GameObject> }>(),
-    drawGameObject: props<{ gameObject: GameObject }>(),
+    setGameObjects: props<{ gameObjects: GameObjects }>(),
+    drawGameObjects: emptyProps(),
   },
 });

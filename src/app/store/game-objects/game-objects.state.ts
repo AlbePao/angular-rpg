@@ -1,11 +1,11 @@
-import { GameObject } from '@lib/models/game-object';
+import { GameObjects } from '@lib/models/game-object';
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { GameObjectsActions } from './game-objects.actions';
 
 export const GameObjectsFeatureKey = 'GameObjects';
 
 // TODO: differentiate gameObjects by type (Person, PizzaStone, etc.) and put each other into different state properties
-export type GameObjectsFeatureState = Record<string, GameObject>;
+export type GameObjectsFeatureState = GameObjects;
 
 const initialState: GameObjectsFeatureState = {};
 

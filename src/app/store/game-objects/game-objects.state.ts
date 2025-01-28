@@ -4,7 +4,6 @@ import { GameObjectsActions } from './game-objects.actions';
 
 export const GameObjectsFeatureKey = 'GameObjects';
 
-// TODO: differentiate gameObjects by type (Person, PizzaStone, etc.) and put each other into different state properties
 export type GameObjectsFeatureState = GameObjects;
 
 const initialState: GameObjectsFeatureState = {};

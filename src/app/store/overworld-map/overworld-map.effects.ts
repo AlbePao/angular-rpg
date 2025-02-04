@@ -4,20 +4,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import { GameObjectsActions } from '@store/game-objects/game-objects.actions';
-import { OverworldActions } from '@store/overworld/overworld.actions';
 import { tap } from 'rxjs';
 import { OverworldMapActions } from './overworld-map.actions';
 import { selectOverworldMaps } from './overworld-map.selectors';
-
-export const initOverworldMaps$ = createEffect(
-  (actions$ = inject(Actions), store = inject(Store)) => {
-    return actions$.pipe(
-      ofType(OverworldMapActions.init),
-      tap(() => store.dispatch(OverworldActions.startGameLoop())),
-    );
-  },
-  { dispatch: false, functional: true },
-);
 
 export const setCurrentMap$ = createEffect(
   (actions$ = inject(Actions), gameContainer = inject(GameContainer), store = inject(Store)) => {

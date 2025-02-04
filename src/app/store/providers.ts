@@ -9,14 +9,12 @@ import { GameObjectsFeatureKey, gameObjectsReducer } from './game-objects/game-o
 import * as OverworldMapEffects from './overworld-map/overworld-map.effects';
 import { OverworldMapFeatureKey, overworldMapReducer } from './overworld-map/overworld-map.state';
 import * as OverworldEffects from './overworld/overworld.effects';
-import { OverworldFeatureKey, overworldReducer } from './overworld/overworld.state';
 
 export const STORE_PROVIDERS = [
   provideStore(
     {
       [DirectionInputFeatureKey]: directionInputReducer,
       [GameObjectsFeatureKey]: gameObjectsReducer,
-      [OverworldFeatureKey]: overworldReducer,
       [OverworldMapFeatureKey]: overworldMapReducer,
     },
     {

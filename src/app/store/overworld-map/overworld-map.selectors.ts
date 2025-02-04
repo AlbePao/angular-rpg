@@ -6,6 +6,11 @@ export const selectOverworldMapState = createFeatureSelector<OverworldMapFeature
 export const selectCurrentMapId = createSelector(selectOverworldMapState, ({ currentMapId }) => ({
   currentMapId,
 }));
+
 export const selectOverworldMaps = createSelector(selectOverworldMapState, ({ maps }) => ({
   maps,
+}));
+
+export const selectOverworldMapsAreInitialized = createSelector(selectOverworldMapState, ({ isInitialized }) => ({
+  isInitialized,
 }));

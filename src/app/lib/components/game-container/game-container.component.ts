@@ -8,10 +8,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { GameContainer } from '@lib/services/game-container.service';
-import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import { OverworldActions } from '@store/overworld/overworld.actions';
-import { selectOverworldIsInitialized } from '@store/overworld/overworld.selectors';
 import { expand, filter, map, Observable, of, share } from 'rxjs';
 
 export interface IFrameData {
@@ -73,14 +71,9 @@ export class GameContainerComponent implements OnInit, AfterViewInit {
   );
 
   ngOnInit(): void {
-    this.frames$
-      .pipe(concatLatestFrom(() => this._store.select(selectOverworldIsInitialized)))
-      .subscribe(([gameState, isInitialized]) => {
-        console.log('dispatch draw action', gameState);
-        if (isInitialized) {
-          this._store.dispatch(OverworldActions.drawObjects());
-        }
-      });
+    this.frames$.subscribe(() => {
+      this._store.dispatch(OverworldActions.drawObjects());
+    });
   }
 
   ngAfterViewInit(): void {

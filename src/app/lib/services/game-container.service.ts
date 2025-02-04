@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
+import { OVERWORLD_MAPS } from '@lib/constants/overworld-maps';
 import { GameObject } from '@lib/models/game-object';
 import { Store } from '@ngrx/store';
-import { OverworldActions } from '@store/overworld/overworld.actions';
+import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
 
 interface GameContainerConfig {
   gameContainer: HTMLDivElement;
@@ -56,7 +57,7 @@ export class GameContainer {
       gameCanvasContext,
     };
 
-    this._store.dispatch(OverworldActions.init());
+    this._store.dispatch(OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'Kitchen' }));
   }
 
   clearCanvas(): void {
@@ -117,6 +118,16 @@ export class GameContainer {
     const { gameCanvasContext } = this._containers;
 
     gameCanvasContext.drawImage(this.mapImage.lowerImage, 0, 0);
+    gameCanvasContext.drawImage(this.mapImage.upperImage, 0, 0);
+  }
+
+  drawLowerMapLayer(): void {
+    const { gameCanvasContext } = this._containers;
+    gameCanvasContext.drawImage(this.mapImage.lowerImage, 0, 0);
+  }
+
+  drawUpperMapLayer(): void {
+    const { gameCanvasContext } = this._containers;
     gameCanvasContext.drawImage(this.mapImage.upperImage, 0, 0);
   }
 }

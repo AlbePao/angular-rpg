@@ -12,6 +12,7 @@ export const gameObjectsReducer = createReducer(
   initialState,
   on(
     GameObjectsActions.setGameObjects,
+    GameObjectsActions.updateGameObjects,
     (state, { gameObjects }): GameObjectsFeatureState => ({ ...state, ...gameObjects }),
   ),
 );

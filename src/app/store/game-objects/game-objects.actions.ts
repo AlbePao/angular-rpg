@@ -6,5 +6,6 @@ export const GameObjectsActions = createActionGroup({
   events: {
     setGameObjects: props<{ gameObjects: GameObjects }>(),
     drawGameObjects: emptyProps(),
+    updateGameObjects: props<{ gameObjects: GameObjects }>(),
   },
 });

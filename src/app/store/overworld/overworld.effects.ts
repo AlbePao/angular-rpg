@@ -13,11 +13,16 @@ export const drawObjects$ = createEffect(
       ofType(OverworldActions.drawObjects),
       concatLatestFrom(() => store.select(selectGameObjects)),
       tap(([, gameObjects]) => {
+        // Clear off the canvas
         gameContainer.clearCanvas();
+
+        // Draw lower layer
         gameContainer.drawLowerMapLayer();
 
+        // Draw game objects
         Object.keys(gameObjects).forEach((key) => gameContainer.drawGameObject(gameObjects[key]));
 
+        // Draw upper layer
         gameContainer.drawUpperMapLayer();
       }),
     );

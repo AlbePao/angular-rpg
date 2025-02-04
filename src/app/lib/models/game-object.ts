@@ -13,7 +13,7 @@ export type GameObjectDirections = 'up' | 'left' | 'down' | 'right';
 
 export type ItemAnimations = 'usedDown' | 'unusedDown';
 
-export interface GameObject {
+export interface AbstractGameObject {
   id: string;
   x: number;
   y: number;
@@ -22,7 +22,7 @@ export interface GameObject {
   currentAnimationFrame: number;
 }
 
-export interface PersonGameObject extends GameObject {
+export interface PersonGameObject extends AbstractGameObject {
   isPlayerControlled: boolean;
   movingProgressRemaining: number;
   type: 'person';
@@ -31,13 +31,14 @@ export interface PersonGameObject extends GameObject {
   currentAnimation: PersonAnimations;
 }
 
-export interface ItemGameObject extends GameObject {
+export interface ItemGameObject extends AbstractGameObject {
   type: 'item';
   animations: unknown;
   currentAnimation: ItemAnimations;
 }
 
+export type GameObject = PersonGameObject | ItemGameObject;
+
 export type PersonGameObjects = Record<string, PersonGameObject>;
 export type ItemGameObjects = Record<string, ItemGameObject>;
-
-export type GameObjects = Record<string, PersonGameObject | ItemGameObject>;
+export type GameObjects = Record<string, GameObject>;

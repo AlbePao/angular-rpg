@@ -5,7 +5,7 @@ export const DirectionInputActions = createActionGroup({
   source: 'DirectionInput',
   events: {
     getHeldDirection: emptyProps(),
-    setHeldDirections: props<{ heldDirections: string[] }>(),
+    setHeldDirections: props<{ heldDirections: GameObjectDirections[] }>(),
     addHeldDirection: props<{ direction: GameObjectDirections }>(),
     removeHeldDirection: props<{ direction: GameObjectDirections }>(),
   },

@@ -31,6 +31,8 @@ export interface PersonGameObject extends AbstractGameObject {
   currentAnimation: PersonAnimations;
 }
 
+export type PersonDirectionUpdates = Record<GameObjectDirections, ['x' | 'y', -1 | 1]>;
+
 export interface ItemGameObject extends AbstractGameObject {
   type: 'item';
   animations: unknown;

@@ -27,11 +27,11 @@ export const directionInputReducer = createReducer(
     return { ...state, heldDirections };
   }),
   on(DirectionInputActions.removeHeldDirection, (state, { direction }): DirectionInputFeatureState => {
-    let heldDirections = [...state.heldDirections];
+    const heldDirections = [...state.heldDirections];
     const index = heldDirections.indexOf(direction);
 
     if (index > -1) {
-      heldDirections = heldDirections.splice(index, 1);
+      heldDirections.splice(index, 1);
     }
 
     return { ...state, heldDirections };

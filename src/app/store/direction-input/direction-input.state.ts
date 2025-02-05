@@ -14,10 +14,6 @@ const initialState: DirectionInputFeatureState = {
 
 export const directionInputReducer = createReducer(
   initialState,
-  on(
-    DirectionInputActions.setHeldDirections,
-    (state, { heldDirections }): DirectionInputFeatureState => ({ ...state, heldDirections }),
-  ),
   on(DirectionInputActions.addHeldDirection, (state, { direction }): DirectionInputFeatureState => {
     let heldDirections = [...state.heldDirections];
 

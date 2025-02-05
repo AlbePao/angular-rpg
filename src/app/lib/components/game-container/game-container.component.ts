@@ -11,7 +11,6 @@ import { OVERWORLD_MAPS } from '@lib/constants/overworld-maps';
 import { GameContainer } from '@lib/services/game-container.service';
 import { Store } from '@ngrx/store';
 import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
-import { OverworldActions } from '@store/overworld/overworld.actions';
 
 @Component({
   selector: 'app-game-container',
@@ -33,11 +32,13 @@ export class GameContainerComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._gameContainer.getCurrentFrame().subscribe(() => {
-      this._store.dispatch(OverworldActions.drawObjects());
+      this._store.dispatch(OverworldMapActions.drawObjects());
     });
 
     // Start the game
-    this._store.dispatch(OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'Kitchen' }));
+    this._store.dispatch(
+      OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'Kitchen', cameraPersonId: 'hero' }),
+    );
   }
 
   ngAfterViewInit(): void {

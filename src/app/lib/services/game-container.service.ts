@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
+import { BASE_CAMERA_X_OFFSET, BASE_CAMERA_Y_OFFSET } from '@lib/constants/game-objects';
 import { GameObject } from '@lib/models/game-object';
 import { OverworldMap } from '@lib/models/overworld-map';
 import { WINDOW } from '@lib/tokens/window';
+import { Utils } from '@lib/utils';
 import { expand, filter, map, Observable, of, share } from 'rxjs';
 
 interface GameContainerConfig {
@@ -30,6 +32,8 @@ interface FrameData {
   frameStartTime: number;
   deltaTime: number;
 }
+
+type CameraOffset = Pick<GameObject, 'x' | 'y'>;
 
 const clampTo30FPS = (frame?: FrameData) => {
   if (!frame) {
@@ -99,11 +103,12 @@ export class GameContainer {
     image.src = src;
   }
 
-  drawGameObject(gameObject: GameObject): void {
+  drawGameObject(gameObject: GameObject, cameraOffset: CameraOffset): void {
     const { x, y, id, hasShadow, currentFrameCoords } = gameObject;
+    const { x: offsetX, y: offsetY } = cameraOffset;
     const { gameCanvasContext } = this._containers;
-    const gameObjectX = x - 8;
-    const gameObjectY = y - 18;
+    const gameObjectX = x - 8 + Utils.withGrid(BASE_CAMERA_X_OFFSET) - offsetX;
+    const gameObjectY = y - 18 + Utils.withGrid(BASE_CAMERA_Y_OFFSET) - offsetY;
     const currentGameObject = this._gameObjectsImages[id];
 
     if (!currentGameObject) {
@@ -128,14 +133,24 @@ export class GameContainer {
     this._mapImage.upperImage.src = upperSrc;
   }
 
-  drawLowerMapLayer(): void {
+  drawLowerMapLayer(cameraOffset: CameraOffset): void {
+    const { x, y } = cameraOffset;
     const { gameCanvasContext } = this._containers;
-    gameCanvasContext.drawImage(this._mapImage.lowerImage, 0, 0);
+    gameCanvasContext.drawImage(
+      this._mapImage.lowerImage,
+      Utils.withGrid(BASE_CAMERA_X_OFFSET) - x,
+      Utils.withGrid(BASE_CAMERA_Y_OFFSET) - y,
+    );
   }
 
-  drawUpperMapLayer(): void {
+  drawUpperMapLayer(cameraOffset: CameraOffset): void {
+    const { x, y } = cameraOffset;
     const { gameCanvasContext } = this._containers;
-    gameCanvasContext.drawImage(this._mapImage.upperImage, 0, 0);
+    gameCanvasContext.drawImage(
+      this._mapImage.upperImage,
+      Utils.withGrid(BASE_CAMERA_X_OFFSET) - x,
+      Utils.withGrid(BASE_CAMERA_Y_OFFSET) - y,
+    );
   }
 
   private _calculateStep(prevFrame?: FrameData): Observable<FrameData | undefined> {

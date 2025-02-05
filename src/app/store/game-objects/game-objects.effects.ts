@@ -1,14 +1,13 @@
 import { inject } from '@angular/core';
-import { BASE_GRID_SIZE } from '@lib/constants/game-objects';
 import { GameObjects, PersonAnimations } from '@lib/models/game-object';
 import { GameContainer } from '@lib/services/game-container.service';
+import { Utils } from '@lib/utils';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import { selectDirection } from '@store/direction-input/direction-input.selectors';
 import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
 import { selectOverworldMaps } from '@store/overworld-map/overworld-map.selectors';
-import { OverworldActions } from '@store/overworld/overworld.actions';
 import { map, tap } from 'rxjs';
 import { GameObjectsActions } from './game-objects.actions';
 import { selectGameObjects } from './game-objects.selectors';
@@ -28,8 +27,8 @@ export const setGameObjects$ = createEffect(
           // Attach the grid size to game object x and y coordinates
           const gameObject = {
             ...currentGameObject,
-            x: x * BASE_GRID_SIZE,
-            y: y * BASE_GRID_SIZE,
+            x: Utils.withGrid(x),
+            y: Utils.withGrid(y),
           };
 
           return { ...prev, [curr]: gameObject };
@@ -48,7 +47,7 @@ export const setGameObjects$ = createEffect(
 export const updatePosition$ = createEffect(
   (actions$ = inject(Actions), store = inject(Store)) => {
     return actions$.pipe(
-      ofType(OverworldActions.drawObjects),
+      ofType(OverworldMapActions.drawObjects),
       concatLatestFrom(() => [store.select(selectGameObjects), store.select(selectDirection)]),
       map(([, gameObjects, currentDirection]) => {
         const updatedGameObjects: GameObjects = { ...gameObjects };

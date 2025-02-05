@@ -8,12 +8,14 @@ export interface OverworldMapFeatureState {
   isInitialized: boolean;
   maps: OverWorldMaps;
   currentMapId: string;
+  cameraPersonId: string;
 }
 
 const initialState: OverworldMapFeatureState = {
   isInitialized: false,
   maps: {},
   currentMapId: '',
+  cameraPersonId: '',
 };
 
 export const overworldMapReducer = createReducer(
@@ -28,5 +30,10 @@ export const overworldMapReducer = createReducer(
     OverworldMapActions.init,
     OverworldMapActions.setCurrentMap,
     (state, { currentMapId }): OverworldMapFeatureState => ({ ...state, currentMapId }),
+  ),
+  on(
+    OverworldMapActions.init,
+    OverworldMapActions.setCameraPerson,
+    (state, { cameraPersonId }): OverworldMapFeatureState => ({ ...state, cameraPersonId }),
   ),
 );

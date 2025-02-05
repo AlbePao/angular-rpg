@@ -1,5 +1,5 @@
 import { OverWorldMaps } from '@lib/models/overworld-map';
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { createActionGroup, props } from '@ngrx/store';
 
 export const OverworldMapActions = createActionGroup({
   source: 'OverworldMap',
@@ -14,6 +14,5 @@ export const OverworldMapActions = createActionGroup({
     setCurrentMap: props<{
       currentMapId: string;
     }>(),
-    drawCurrentMap: emptyProps(),
   },
 });

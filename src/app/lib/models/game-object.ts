@@ -1,3 +1,5 @@
+export type GameObjectFrameCoords = [number, number];
+
 export type PersonAnimations =
   | 'idle-down'
   | 'idle-right'
@@ -7,7 +9,7 @@ export type PersonAnimations =
   | 'walk-right'
   | 'walk-up'
   | 'walk-left';
-export type PersonAnimationsMap = Record<PersonAnimations, [number, number][]>;
+export type PersonAnimationsMap = Record<PersonAnimations, GameObjectFrameCoords[]>;
 
 export type GameObjectDirections = 'up' | 'left' | 'down' | 'right';
 
@@ -22,7 +24,7 @@ interface AbstractGameObject {
   currentAnimationFrame: number;
   animationFrameLimit: number;
   animationFrameProgress: number;
-  currentFrameCoords: [number, number];
+  currentFrameCoords: GameObjectFrameCoords;
 }
 
 export interface PersonGameObject extends AbstractGameObject {
@@ -30,6 +32,7 @@ export interface PersonGameObject extends AbstractGameObject {
   movingProgressRemaining: number;
   type: 'person';
   direction: GameObjectDirections;
+  directionUpdate: PersonDirectionUpdates;
   animations: PersonAnimationsMap;
   currentAnimation: PersonAnimations;
 }

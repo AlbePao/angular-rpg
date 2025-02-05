@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { PERSON_DIRECTION_UPDATE } from '@lib/constants/person-direction-update';
+import { BASE_GRID_SIZE } from '@lib/constants/game-objects';
 import { GameObjects, PersonAnimations } from '@lib/models/game-object';
 import { GameContainer } from '@lib/services/game-container.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -28,8 +28,8 @@ export const setGameObjects$ = createEffect(
           // Attach the grid size to game object x and y coordinates
           const gameObject = {
             ...currentGameObject,
-            x: x * 16, // TODO: extract in a constant
-            y: y * 16, // TODO: extract in a constant
+            x: x * BASE_GRID_SIZE,
+            y: y * BASE_GRID_SIZE,
           };
 
           return { ...prev, [curr]: gameObject };
@@ -60,7 +60,7 @@ export const updatePosition$ = createEffect(
           if (gameObject.type === 'person') {
             // Update position
             if (gameObject.movingProgressRemaining > 0) {
-              const [axis, progression] = PERSON_DIRECTION_UPDATE[gameObject.direction];
+              const [axis, progression] = gameObject.directionUpdate[gameObject.direction];
               gameObject[axis] += progression;
               gameObject.movingProgressRemaining -= 1;
             }

@@ -1,6 +1,13 @@
-import { PersonAnimationsMap } from '@lib/models/game-object';
+import { PersonAnimationsMap, PersonDirectionUpdates } from '@lib/models/game-object';
 
-export const DEFAULT_PERSON_ANIMATIONS: PersonAnimationsMap = {
+export const PERSON_DIRECTION_UPDATES: PersonDirectionUpdates = {
+  up: ['y', -1],
+  down: ['y', 1],
+  left: ['x', -1],
+  right: ['x', 1],
+};
+
+export const PERSON_ANIMATIONS: PersonAnimationsMap = {
   'idle-down': [[0, 0]],
   'idle-right': [[0, 1]],
   'idle-up': [[0, 2]],

@@ -13,7 +13,7 @@ export type GameObjectDirections = 'up' | 'left' | 'down' | 'right';
 
 export type ItemAnimations = 'usedDown' | 'unusedDown';
 
-export interface AbstractGameObject {
+interface AbstractGameObject {
   id: string;
   x: number;
   y: number;

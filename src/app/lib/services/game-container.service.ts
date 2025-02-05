@@ -100,7 +100,7 @@ export class GameContainer {
   }
 
   drawGameObject(gameObject: GameObject): void {
-    const { x, y, id, hasShadow } = gameObject;
+    const { x, y, id, hasShadow, currentFrameCoords } = gameObject;
     const { gameCanvasContext } = this._containers;
     const gameObjectX = x - 8;
     const gameObjectY = y - 18;
@@ -116,7 +116,7 @@ export class GameContainer {
       gameCanvasContext.drawImage(shadowImage, gameObjectX, gameObjectY);
     }
 
-    const [frameX, frameY] = gameObject.currentFrameCoords;
+    const [frameX, frameY] = currentFrameCoords;
 
     gameCanvasContext.drawImage(image, frameX * 32, frameY * 32, 32, 32, gameObjectX, gameObjectY, 32, 32);
   }

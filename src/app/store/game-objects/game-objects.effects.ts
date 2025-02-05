@@ -58,9 +58,20 @@ export const updatePosition$ = createEffect(
 
           // TODO: extract following logic and concatenate it with sequential effects
           if (gameObject.type === 'person') {
+            const {
+              movingProgressRemaining,
+              directionUpdate,
+              direction,
+              isPlayerControlled,
+              currentAnimation,
+              animationFrameLimit,
+              currentAnimationFrame,
+              animations,
+            } = gameObject;
+
             // Update position
-            if (gameObject.movingProgressRemaining > 0) {
-              const [axis, progression] = gameObject.directionUpdate[gameObject.direction];
+            if (movingProgressRemaining > 0) {
+              const [axis, progression] = directionUpdate[direction];
               gameObject[axis] += progression;
               gameObject.movingProgressRemaining -= 1;
             }
@@ -68,23 +79,22 @@ export const updatePosition$ = createEffect(
             // Update sprite
             let key: PersonAnimations | null = null;
 
-            if (gameObject.isPlayerControlled && gameObject.movingProgressRemaining === 0 && !currentDirection) {
-              key = `idle-${gameObject.direction}`;
-            } else if (gameObject.movingProgressRemaining > 0) {
-              key = `walk-${gameObject.direction}`;
+            if (isPlayerControlled && movingProgressRemaining === 0 && !currentDirection) {
+              key = `idle-${direction}`;
+            } else if (movingProgressRemaining > 0) {
+              key = `walk-${direction}`;
             }
 
-            if (key && gameObject.currentAnimation !== key) {
+            if (key && currentAnimation !== key) {
               gameObject.currentAnimation = key;
               gameObject.currentAnimationFrame = 0;
-              gameObject.animationFrameProgress = gameObject.animationFrameLimit;
+              gameObject.animationFrameProgress = animationFrameLimit;
             }
 
-            gameObject.currentFrameCoords =
-              gameObject.animations[gameObject.currentAnimation][gameObject.currentAnimationFrame];
+            gameObject.currentFrameCoords = animations[currentAnimation][currentAnimationFrame];
 
             // Update game object data
-            if (gameObject.isPlayerControlled && gameObject.movingProgressRemaining === 0 && currentDirection) {
+            if (isPlayerControlled && movingProgressRemaining === 0 && currentDirection) {
               gameObject.direction = currentDirection;
               gameObject.movingProgressRemaining = 16;
             }
@@ -111,15 +121,17 @@ export const updateAnimationProgress$ = createEffect(
           const gameObject = { ...updatedGameObjects[key] };
 
           if (gameObject.type === 'person') {
+            const { animationFrameProgress, currentAnimation, animationFrameLimit, currentAnimationFrame, animations } =
+              gameObject;
+
             // Downtick frame progress
-            if (gameObject.animationFrameProgress > 0) {
+            if (animationFrameProgress > 0) {
               gameObject.animationFrameProgress -= 1;
             } else {
               // Reset the counter
-              gameObject.animationFrameProgress = gameObject.animationFrameLimit;
+              gameObject.animationFrameProgress = animationFrameLimit;
 
-              const nextAnimation =
-                gameObject.animations[gameObject.currentAnimation][gameObject.currentAnimationFrame + 1];
+              const nextAnimation = animations[currentAnimation][currentAnimationFrame + 1];
 
               if (nextAnimation) {
                 gameObject.currentAnimationFrame += 1;

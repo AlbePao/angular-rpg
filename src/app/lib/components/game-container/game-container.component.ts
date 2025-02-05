@@ -7,26 +7,11 @@ import {
   OnInit,
   viewChild,
 } from '@angular/core';
+import { OVERWORLD_MAPS } from '@lib/constants/overworld-maps';
 import { GameContainer } from '@lib/services/game-container.service';
 import { Store } from '@ngrx/store';
+import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
 import { OverworldActions } from '@store/overworld/overworld.actions';
-import { expand, filter, map, Observable, of, share } from 'rxjs';
-
-export interface IFrameData {
-  frameStartTime: number;
-  deltaTime: number;
-}
-
-const clampTo30FPS = (frame?: IFrameData) => {
-  if (!frame) {
-    return frame;
-  }
-
-  if (frame.deltaTime > 1 / 30) {
-    frame.deltaTime = 1 / 30;
-  }
-  return frame;
-};
 
 @Component({
   selector: 'app-game-container',
@@ -46,44 +31,18 @@ export class GameContainerComponent implements OnInit, AfterViewInit {
   gameContainer = viewChild<ElementRef<HTMLDivElement>>('gameContainer');
   gameCanvas = viewChild<ElementRef<HTMLCanvasElement>>('gameCanvas');
 
-  calculateStep: (prevFrame?: IFrameData) => Observable<IFrameData | undefined> = (
-    prevFrame: IFrameData | undefined,
-  ) => {
-    return new Observable<IFrameData | undefined>((observer) => {
-      requestAnimationFrame((frameStartTime) => {
-        // Millis to seconds
-        const deltaTime = prevFrame ? (frameStartTime - prevFrame.frameStartTime) / 1000 : 0;
-        observer.next({
-          frameStartTime,
-          deltaTime,
-        });
-      });
-    }).pipe(map((frame) => clampTo30FPS(frame)));
-  };
-
-  frames$ = of(undefined).pipe(
-    expand((val) => this.calculateStep(val)),
-    // Expand emits the first value provided to it, and in this
-    //  case we just want to ignore the undefined input frame
-    filter((frame) => frame !== undefined),
-    map((frame: IFrameData) => frame.deltaTime),
-    share(),
-  );
-
   ngOnInit(): void {
-    this.frames$.subscribe(() => {
+    this._gameContainer.getCurrentFrame().subscribe(() => {
       this._store.dispatch(OverworldActions.drawObjects());
     });
+
+    // Start the game
+    this._store.dispatch(OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'Kitchen' }));
   }
 
   ngAfterViewInit(): void {
     const gameContainer = this.gameContainer()?.nativeElement;
     const gameCanvas = this.gameCanvas()?.nativeElement;
-
-    if (!gameContainer || !gameCanvas) {
-      throw new Error('Game container or game canvas not found');
-    }
-
     this._gameContainer.init({ gameContainer, gameCanvas });
   }
 }

@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { OVERWORLD_MAPS } from '@lib/constants/overworld-maps';
 import { GameObject } from '@lib/models/game-object';
-import { Store } from '@ngrx/store';
-import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
+import { OverworldMap } from '@lib/models/overworld-map';
+import { WINDOW } from '@lib/tokens/window';
+import { expand, filter, map, Observable, of, share } from 'rxjs';
 
 interface GameContainerConfig {
   gameContainer: HTMLDivElement;
@@ -26,25 +26,39 @@ type GameObjectsImages = Record<
   }
 >;
 
+interface FrameData {
+  frameStartTime: number;
+  deltaTime: number;
+}
+
+const clampTo30FPS = (frame?: FrameData) => {
+  if (!frame) {
+    return frame;
+  }
+
+  if (frame.deltaTime > 1 / 30) {
+    frame.deltaTime = 1 / 30;
+  }
+  return frame;
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class GameContainer {
-  private readonly _store = inject(Store);
-
-  get containers(): GameContainers {
-    return this._containers;
-  }
+  private readonly _window = inject(WINDOW);
   private _containers!: GameContainers;
-
-  mapImage: MapImage = {
+  private _gameObjectsImages: GameObjectsImages = {};
+  private _mapImage: MapImage = {
     lowerImage: new Image(),
     upperImage: new Image(),
   };
 
-  gameObjectsImages: GameObjectsImages = {};
+  init({ gameContainer, gameCanvas }: Partial<GameContainerConfig>): void {
+    if (!gameContainer || !gameCanvas) {
+      throw new Error('Game container or game canvas not found');
+    }
 
-  init({ gameContainer, gameCanvas }: GameContainerConfig): void {
     const gameCanvasContext = gameCanvas.getContext('2d');
 
     if (!gameCanvasContext) {
@@ -56,8 +70,6 @@ export class GameContainer {
       gameCanvas,
       gameCanvasContext,
     };
-
-    this._store.dispatch(OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'Kitchen' }));
   }
 
   clearCanvas(): void {
@@ -67,7 +79,7 @@ export class GameContainer {
 
   setGameObjectImage(gameObject: GameObject): void {
     const { id, hasShadow, src } = gameObject;
-    let currentGameObject = this.gameObjectsImages[id];
+    let currentGameObject = this._gameObjectsImages[id];
 
     if (!currentGameObject) {
       currentGameObject = {
@@ -75,7 +87,7 @@ export class GameContainer {
         shadowImage: new Image(),
       };
 
-      this.gameObjectsImages[id] = currentGameObject;
+      this._gameObjectsImages[id] = currentGameObject;
     }
 
     const { image, shadowImage } = currentGameObject;
@@ -90,9 +102,9 @@ export class GameContainer {
   drawGameObject(gameObject: GameObject): void {
     const { x, y, id, hasShadow } = gameObject;
     const { gameCanvasContext } = this._containers;
-    const gameObjectX = x * 16 - 8;
-    const gameObjectY = y * 16 - 18;
-    const currentGameObject = this.gameObjectsImages[id];
+    const gameObjectX = x - 8;
+    const gameObjectY = y - 18;
+    const currentGameObject = this._gameObjectsImages[id];
 
     if (!currentGameObject) {
       throw new Error('GameObject image not found');
@@ -107,27 +119,44 @@ export class GameContainer {
     gameCanvasContext.drawImage(image, 0, 0, 32, 32, gameObjectX, gameObjectY, 32, 32);
   }
 
-  setMapImage(src: { lowerSrc: string; upperSrc: string }): void {
+  setMapImage(src: Pick<OverworldMap, 'lowerSrc' | 'upperSrc'>): void {
     const { lowerSrc, upperSrc } = src;
 
-    this.mapImage.lowerImage.src = lowerSrc;
-    this.mapImage.upperImage.src = upperSrc;
-  }
-
-  drawMapImage(): void {
-    const { gameCanvasContext } = this._containers;
-
-    gameCanvasContext.drawImage(this.mapImage.lowerImage, 0, 0);
-    gameCanvasContext.drawImage(this.mapImage.upperImage, 0, 0);
+    this._mapImage.lowerImage.src = lowerSrc;
+    this._mapImage.upperImage.src = upperSrc;
   }
 
   drawLowerMapLayer(): void {
     const { gameCanvasContext } = this._containers;
-    gameCanvasContext.drawImage(this.mapImage.lowerImage, 0, 0);
+    gameCanvasContext.drawImage(this._mapImage.lowerImage, 0, 0);
   }
 
   drawUpperMapLayer(): void {
     const { gameCanvasContext } = this._containers;
-    gameCanvasContext.drawImage(this.mapImage.upperImage, 0, 0);
+    gameCanvasContext.drawImage(this._mapImage.upperImage, 0, 0);
+  }
+
+  private _calculateStep(prevFrame?: FrameData): Observable<FrameData | undefined> {
+    return new Observable<FrameData | undefined>((observer) => {
+      this._window.requestAnimationFrame((frameStartTime) => {
+        // Millis to seconds
+        const deltaTime = prevFrame ? (frameStartTime - prevFrame.frameStartTime) / 1000 : 0;
+        observer.next({
+          frameStartTime,
+          deltaTime,
+        });
+      });
+    }).pipe(map((frame) => clampTo30FPS(frame)));
+  }
+
+  getCurrentFrame() {
+    return of(undefined).pipe(
+      expand((val) => this._calculateStep(val)),
+      // Expand emits the first value provided to it, and in this
+      //  case we just want to ignore the undefined input frame
+      filter((frame) => frame !== undefined),
+      map((frame: FrameData) => frame.deltaTime),
+      share(),
+    );
   }
 }

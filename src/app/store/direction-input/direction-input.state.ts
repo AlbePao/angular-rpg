@@ -15,15 +15,23 @@ const initialState: DirectionInputFeatureState = {
 export const directionInputReducer = createReducer(
   initialState,
   on(DirectionInputActions.addHeldDirection, (state, { direction }): DirectionInputFeatureState => {
+    if (!direction) {
+      return state;
+    }
+
     let heldDirections = [...state.heldDirections];
 
-    if (direction && heldDirections.indexOf(direction) === -1) {
+    if (heldDirections.indexOf(direction) === -1) {
       heldDirections = [direction, ...heldDirections];
     }
 
     return { ...state, heldDirections };
   }),
   on(DirectionInputActions.removeHeldDirection, (state, { direction }): DirectionInputFeatureState => {
+    if (!direction) {
+      return state;
+    }
+
     const heldDirections = [...state.heldDirections];
     const index = heldDirections.indexOf(direction);
 

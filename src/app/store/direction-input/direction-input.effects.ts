@@ -5,9 +5,10 @@ import { createEffect } from '@ngrx/effects';
 import { fromEvent, map } from 'rxjs';
 import { DirectionInputActions } from './direction-input.actions';
 
-type InputKeys = 'ArrowUp' | 'KeyW' | 'ArrowDown' | 'KeyS' | 'ArrowLeft' | 'KeyA' | 'ArrowRight' | 'KeyD';
+const INPUT_KEYS = ['ArrowUp', 'KeyW', 'ArrowDown', 'KeyS', 'ArrowLeft', 'KeyA', 'ArrowRight', 'KeyD'] as const;
+type InputKeys = (typeof INPUT_KEYS)[number];
 
-type DirectionInputMap = Record<string, GameObjectDirections>;
+type DirectionInputMap = Record<InputKeys, GameObjectDirections>;
 
 const DIRECTION_INPUT_MAP: DirectionInputMap = {
   ArrowUp: 'up',
@@ -20,13 +21,16 @@ const DIRECTION_INPUT_MAP: DirectionInputMap = {
   KeyD: 'right',
 };
 
+function isAllowedKey(keyInput: string): keyInput is InputKeys {
+  return INPUT_KEYS.includes(keyInput);
+}
+
 export const keydown$ = createEffect(
   (document = inject(DOCUMENT)) => {
     return fromEvent<KeyboardEvent>(document, 'keydown').pipe(
-      map((event) => {
-        const direction = DIRECTION_INPUT_MAP[event.code];
-        return DirectionInputActions.addHeldDirection({ direction });
-      }),
+      map(({ code }) =>
+        DirectionInputActions.addHeldDirection({ direction: isAllowedKey(code) ? DIRECTION_INPUT_MAP[code] : null }),
+      ),
     );
   },
   { functional: true },
@@ -35,10 +39,9 @@ export const keydown$ = createEffect(
 export const keyup$ = createEffect(
   (document = inject(DOCUMENT)) => {
     return fromEvent<KeyboardEvent>(document, 'keyup').pipe(
-      map((event) => {
-        const direction = DIRECTION_INPUT_MAP[event.code];
-        return DirectionInputActions.removeHeldDirection({ direction });
-      }),
+      map(({ code }) =>
+        DirectionInputActions.removeHeldDirection({ direction: isAllowedKey(code) ? DIRECTION_INPUT_MAP[code] : null }),
+      ),
     );
   },
   { functional: true },

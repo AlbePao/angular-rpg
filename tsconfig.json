@@ -6,7 +6,7 @@
     "baseUrl": "./",
     "paths": {
       "@lib/*": ["src/app/lib/*"],
-      "@store/*": ["src/app/store/*"],
+      "@store/*": ["src/app/store/*"]
     },
     "outDir": "./dist/out-tsc",
     "allowSyntheticDefaultImports": true,

@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { PERSON_DIRECTION_UPDATE } from '@lib/constants/person-direction-update';
-import { GameObjects } from '@lib/models/game-object';
+import { GameObjects, PersonAnimations } from '@lib/models/game-object';
 import { GameContainer } from '@lib/services/game-container.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
@@ -56,6 +56,7 @@ export const updatePosition$ = createEffect(
         Object.keys(updatedGameObjects).forEach((key) => {
           const gameObject = { ...updatedGameObjects[key] };
 
+          // TODO: extract following logic and concatenate it with sequential effects
           if (gameObject.type === 'person') {
             // Update position
             if (gameObject.movingProgressRemaining > 0) {
@@ -63,6 +64,24 @@ export const updatePosition$ = createEffect(
               gameObject[axis] += progression;
               gameObject.movingProgressRemaining -= 1;
             }
+
+            // Update sprite
+            let key: PersonAnimations | null = null;
+
+            if (gameObject.isPlayerControlled && gameObject.movingProgressRemaining === 0 && !currentDirection) {
+              key = `idle-${gameObject.direction}`;
+            } else if (gameObject.movingProgressRemaining > 0) {
+              key = `walk-${gameObject.direction}`;
+            }
+
+            if (key && gameObject.currentAnimation !== key) {
+              gameObject.currentAnimation = key;
+              gameObject.currentAnimationFrame = 0;
+              gameObject.animationFrameProgress = gameObject.animationFrameLimit;
+            }
+
+            gameObject.currentFrameCoords =
+              gameObject.animations[gameObject.currentAnimation][gameObject.currentAnimationFrame];
 
             // Update game object data
             if (gameObject.isPlayerControlled && gameObject.movingProgressRemaining === 0 && currentDirection) {
@@ -75,6 +94,45 @@ export const updatePosition$ = createEffect(
         });
 
         return GameObjectsActions.updateGameObjects({ gameObjects: updatedGameObjects });
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const updateAnimationProgress$ = createEffect(
+  (actions$ = inject(Actions)) => {
+    return actions$.pipe(
+      ofType(GameObjectsActions.updateGameObjects),
+      map(({ gameObjects }) => {
+        const updatedGameObjects: GameObjects = { ...gameObjects };
+
+        Object.keys(updatedGameObjects).forEach((key) => {
+          const gameObject = { ...updatedGameObjects[key] };
+
+          if (gameObject.type === 'person') {
+            // Downtick frame progress
+            if (gameObject.animationFrameProgress > 0) {
+              gameObject.animationFrameProgress -= 1;
+            } else {
+              // Reset the counter
+              gameObject.animationFrameProgress = gameObject.animationFrameLimit;
+
+              const nextAnimation =
+                gameObject.animations[gameObject.currentAnimation][gameObject.currentAnimationFrame + 1];
+
+              if (nextAnimation) {
+                gameObject.currentAnimationFrame += 1;
+              } else {
+                gameObject.currentAnimationFrame = 0;
+              }
+            }
+          }
+
+          updatedGameObjects[key] = gameObject;
+        });
+
+        return GameObjectsActions.updateAnimationProgress({ gameObjects: updatedGameObjects });
       }),
     );
   },

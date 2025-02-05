@@ -20,6 +20,9 @@ interface AbstractGameObject {
   src: string;
   hasShadow: boolean;
   currentAnimationFrame: number;
+  animationFrameLimit: number;
+  animationFrameProgress: number;
+  currentFrameCoords: [number, number];
 }
 
 export interface PersonGameObject extends AbstractGameObject {

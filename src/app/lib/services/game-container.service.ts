@@ -116,7 +116,9 @@ export class GameContainer {
       gameCanvasContext.drawImage(shadowImage, gameObjectX, gameObjectY);
     }
 
-    gameCanvasContext.drawImage(image, 0, 0, 32, 32, gameObjectX, gameObjectY, 32, 32);
+    const [frameX, frameY] = gameObject.currentFrameCoords;
+
+    gameCanvasContext.drawImage(image, frameX * 32, frameY * 32, 32, 32, gameObjectX, gameObjectY, 32, 32);
   }
 
   setMapImage(src: Pick<OverworldMap, 'lowerSrc' | 'upperSrc'>): void {

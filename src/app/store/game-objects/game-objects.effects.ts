@@ -50,21 +50,23 @@ export const updatePosition$ = createEffect(
     return actions$.pipe(
       ofType(OverworldActions.drawObjects),
       concatLatestFrom(() => [store.select(selectGameObjects), store.select(selectDirection)]),
-      map(([, gameObjects, gameObjectDirection]) => {
+      map(([, gameObjects, currentDirection]) => {
         const updatedGameObjects: GameObjects = { ...gameObjects };
 
         Object.keys(updatedGameObjects).forEach((key) => {
           const gameObject = { ...updatedGameObjects[key] };
 
           if (gameObject.type === 'person') {
+            // Update position
             if (gameObject.movingProgressRemaining > 0) {
               const [axis, progression] = PERSON_DIRECTION_UPDATE[gameObject.direction];
               gameObject[axis] += progression;
               gameObject.movingProgressRemaining -= 1;
             }
 
-            if (gameObject.isPlayerControlled && gameObject.movingProgressRemaining === 0 && gameObjectDirection) {
-              gameObject.direction = gameObjectDirection;
+            // Update game object data
+            if (gameObject.isPlayerControlled && gameObject.movingProgressRemaining === 0 && currentDirection) {
+              gameObject.direction = currentDirection;
               gameObject.movingProgressRemaining = 16;
             }
           }

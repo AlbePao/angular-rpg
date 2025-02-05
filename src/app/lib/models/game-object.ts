@@ -1,12 +1,12 @@
 export type PersonAnimations =
-  | 'idleDown'
-  | 'idleRight'
-  | 'idleUp'
-  | 'idleLeft'
-  | 'walkDown'
-  | 'walkRight'
-  | 'walkUp'
-  | 'walkLeft';
+  | 'idle-down'
+  | 'idle-right'
+  | 'idle-up'
+  | 'idle-left'
+  | 'walk-down'
+  | 'walk-right'
+  | 'walk-up'
+  | 'walk-left';
 export type PersonAnimationsMap = Record<PersonAnimations, [number, number][]>;
 
 export type GameObjectDirections = 'up' | 'left' | 'down' | 'right';

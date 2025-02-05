@@ -1,29 +1,29 @@
 import { PersonAnimationsMap } from '@lib/models/game-object';
 
 export const DEFAULT_PERSON_ANIMATIONS: PersonAnimationsMap = {
-  idleDown: [[0, 0]],
-  idleRight: [[0, 1]],
-  idleUp: [[0, 2]],
-  idleLeft: [[0, 3]],
-  walkDown: [
+  'idle-down': [[0, 0]],
+  'idle-right': [[0, 1]],
+  'idle-up': [[0, 2]],
+  'idle-left': [[0, 3]],
+  'walk-down': [
     [1, 0],
     [0, 0],
     [3, 0],
     [0, 0],
   ],
-  walkRight: [
+  'walk-right': [
     [1, 1],
     [0, 1],
     [3, 1],
     [0, 1],
   ],
-  walkUp: [
+  'walk-up': [
     [1, 2],
     [0, 2],
     [3, 2],
     [0, 2],
   ],
-  walkLeft: [
+  'walk-left': [
     [1, 3],
     [0, 3],
     [3, 3],

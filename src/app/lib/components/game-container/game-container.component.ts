@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { OVERWORLD_MAPS } from '@lib/constants/overworld-maps';
 import { GameContainer } from '@lib/services/game-container.service';
+import { GameLoop } from '@lib/services/game-loop.service';
 import { Store } from '@ngrx/store';
 import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
 
@@ -25,13 +26,14 @@ import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions'
 })
 export class GameContainerComponent implements OnInit, AfterViewInit {
   private readonly _gameContainer = inject(GameContainer);
+  private readonly _gameLoop = inject(GameLoop);
   private readonly _store = inject(Store);
 
   gameContainer = viewChild<ElementRef<HTMLDivElement>>('gameContainer');
   gameCanvas = viewChild<ElementRef<HTMLCanvasElement>>('gameCanvas');
 
   ngOnInit(): void {
-    this._gameContainer.getCurrentFrame().subscribe(() => {
+    this._gameLoop.getCurrentFrame().subscribe(() => {
       this._store.dispatch(OverworldMapActions.drawObjects());
     });
 

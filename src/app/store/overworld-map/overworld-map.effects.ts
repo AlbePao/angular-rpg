@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
-import { GameContainer } from '@lib/services/game-container.service';
+import { CameraOffset } from '@lib/models/camera-offset';
+import { GameCanvas } from '@lib/services/game-canvas.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
@@ -9,26 +10,26 @@ import { OverworldMapActions } from './overworld-map.actions';
 import { selectCameraPersonId, selectOverworldMaps } from './overworld-map.selectors';
 
 export const drawObjects$ = createEffect(
-  (actions$ = inject(Actions), store = inject(Store), gameContainer = inject(GameContainer)) => {
+  (actions$ = inject(Actions), store = inject(Store), gameCanvas = inject(GameCanvas)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.drawObjects),
       concatLatestFrom(() => [store.select(selectGameObjects), store.select(selectCameraPersonId)]),
       tap(([, gameObjects, cameraPersonId]) => {
         // Get the camera person offset
-        const { x, y } = gameObjects[cameraPersonId];
-        const cameraOffset = { x, y };
+        const { x: offsetX, y: offsetY } = gameObjects[cameraPersonId];
+        const cameraOffset: CameraOffset = { offsetX, offsetY };
 
         // Clear off the canvas
-        gameContainer.clearCanvas();
+        gameCanvas.clearCanvas();
 
         // Draw lower layer
-        gameContainer.drawLowerMapLayer(cameraOffset);
+        gameCanvas.drawLowerMapLayer(cameraOffset);
 
         // Draw game objects
-        Object.keys(gameObjects).forEach((key) => gameContainer.drawGameObject(gameObjects[key], cameraOffset));
+        Object.keys(gameObjects).forEach((key) => gameCanvas.drawGameObject(gameObjects[key], cameraOffset));
 
         // Draw upper layer
-        gameContainer.drawUpperMapLayer(cameraOffset);
+        gameCanvas.drawUpperMapLayer(cameraOffset);
       }),
     );
   },
@@ -36,7 +37,7 @@ export const drawObjects$ = createEffect(
 );
 
 export const setCurrentMap$ = createEffect(
-  (actions$ = inject(Actions), gameContainer = inject(GameContainer), store = inject(Store)) => {
+  (actions$ = inject(Actions), gameCanvas = inject(GameCanvas), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.init, OverworldMapActions.setCurrentMap),
       concatLatestFrom(() => store.select(selectOverworldMaps)),
@@ -44,7 +45,7 @@ export const setCurrentMap$ = createEffect(
         const { lowerSrc, upperSrc } = maps[currentMapId];
 
         // Set the lower and upper map images
-        gameContainer.setMapImage({ lowerSrc, upperSrc });
+        gameCanvas.setMapImage({ lowerSrc, upperSrc });
       }),
     );
   },

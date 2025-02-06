@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { GameObjects, PersonAnimations } from '@lib/models/game-object';
-import { GameContainer } from '@lib/services/game-container.service';
+import { GameCanvas } from '@lib/services/game-canvas.service';
 import { Utils } from '@lib/utils';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
@@ -13,7 +13,7 @@ import { GameObjectsActions } from './game-objects.actions';
 import { selectGameObjects } from './game-objects.selectors';
 
 export const setGameObjects$ = createEffect(
-  (actions$ = inject(Actions), gameContainer = inject(GameContainer), store = inject(Store)) => {
+  (actions$ = inject(Actions), gameCanvas = inject(GameCanvas), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.init, OverworldMapActions.setCurrentMap),
       concatLatestFrom(() => store.select(selectOverworldMaps)),
@@ -35,9 +35,7 @@ export const setGameObjects$ = createEffect(
         }, {});
       }),
       // Set the game objects for the current map
-      tap((gameObjects) =>
-        Object.keys(gameObjects).forEach((key) => gameContainer.setGameObjectImage(gameObjects[key])),
-      ),
+      tap((gameObjects) => Object.keys(gameObjects).forEach((key) => gameCanvas.setGameObjectImage(gameObjects[key]))),
       map((gameObjects) => GameObjectsActions.setGameObjects({ gameObjects })),
     );
   },

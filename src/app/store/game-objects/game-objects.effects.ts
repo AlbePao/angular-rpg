@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
-import { GameObjects, PersonAnimations } from '@lib/models/game-object';
+import { GameObjects } from '@lib/models/game-object';
+import { PersonAnimations } from '@lib/models/game-object-person';
 import { GameCanvas } from '@lib/services/game-canvas.service';
 import { Utils } from '@lib/utils';
 import { Actions, createEffect, ofType } from '@ngrx/effects';

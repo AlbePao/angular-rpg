@@ -1,4 +1,4 @@
-import { PersonAnimationsMap, PersonDirectionUpdates } from '@lib/models/game-object';
+import { PersonAnimationsMap, PersonDirectionUpdates } from '@lib/models/game-object-person';
 
 export const PERSON_DIRECTION_UPDATES: PersonDirectionUpdates = {
   up: ['y', -1],

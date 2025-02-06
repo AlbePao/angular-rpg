@@ -1,11 +1,11 @@
-import { GameObjectDirections } from '@lib/models/game-object';
+import { PersonDirections } from '@lib/models/game-object-person';
 import { createReducer, on } from '@ngrx/store';
 import { DirectionInputActions } from './direction-input.actions';
 
 export const DirectionInputFeatureKey = 'DirectionInput';
 
 export interface DirectionInputFeatureState {
-  heldDirections: GameObjectDirections[];
+  heldDirections: PersonDirections[];
 }
 
 const initialState: DirectionInputFeatureState = {

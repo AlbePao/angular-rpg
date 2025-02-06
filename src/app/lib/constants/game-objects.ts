@@ -1,4 +1,4 @@
-import { GameObjectFrameCoords } from '@lib/models/game-object';
+import { GameObjectFrameCoords } from '@lib/models/game-object-abstract';
 
 export const BASE_ANIMATION_FRAME_LIMIT = 8;
 export const BASE_FRAME_COORDS: GameObjectFrameCoords = [0, 0];

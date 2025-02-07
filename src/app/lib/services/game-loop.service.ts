@@ -7,6 +7,7 @@ interface FrameData {
   deltaTime: number;
 }
 
+// TODO: improve clamping with distinctUntilChanged
 const clampTo30FPS = (frame: FrameData | null) => {
   if (!frame) {
     return frame;

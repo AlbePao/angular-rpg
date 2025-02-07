@@ -25,7 +25,7 @@ function isAllowedKey(keyInput: string): keyInput is InputKeys {
   return INPUT_KEYS.includes(keyInput);
 }
 
-export const keydown$ = createEffect(
+export const keydown = createEffect(
   (document = inject(DOCUMENT)) => {
     return fromEvent<KeyboardEvent>(document, 'keydown').pipe(
       map(({ code }) =>
@@ -36,7 +36,7 @@ export const keydown$ = createEffect(
   { functional: true },
 );
 
-export const keyup$ = createEffect(
+export const keyup = createEffect(
   (document = inject(DOCUMENT)) => {
     return fromEvent<KeyboardEvent>(document, 'keyup').pipe(
       map(({ code }) =>

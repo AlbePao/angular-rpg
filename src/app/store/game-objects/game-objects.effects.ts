@@ -13,7 +13,7 @@ import { map, tap } from 'rxjs';
 import { GameObjectsActions } from './game-objects.actions';
 import { selectGameObjects } from './game-objects.selectors';
 
-export const setGameObjects$ = createEffect(
+export const setGameObjects = createEffect(
   (actions$ = inject(Actions), gameCanvas = inject(GameCanvas), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.init, OverworldMapActions.setCurrentMap),
@@ -43,7 +43,7 @@ export const setGameObjects$ = createEffect(
   { functional: true },
 );
 
-export const updatePosition$ = createEffect(
+export const updatePosition = createEffect(
   (actions$ = inject(Actions), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.drawObjects),
@@ -108,7 +108,7 @@ export const updatePosition$ = createEffect(
   { functional: true },
 );
 
-export const updateAnimationProgress$ = createEffect(
+export const updateAnimationProgress = createEffect(
   (actions$ = inject(Actions)) => {
     return actions$.pipe(
       ofType(GameObjectsActions.updateGameObjects),

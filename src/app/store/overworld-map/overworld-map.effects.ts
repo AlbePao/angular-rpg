@@ -9,7 +9,7 @@ import { tap } from 'rxjs';
 import { OverworldMapActions } from './overworld-map.actions';
 import { selectCameraPersonId, selectOverworldMaps } from './overworld-map.selectors';
 
-export const drawObjects$ = createEffect(
+export const drawObjects = createEffect(
   (actions$ = inject(Actions), store = inject(Store), gameCanvas = inject(GameCanvas)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.drawObjects),
@@ -36,7 +36,7 @@ export const drawObjects$ = createEffect(
   { dispatch: false, functional: true },
 );
 
-export const setCurrentMap$ = createEffect(
+export const setCurrentMap = createEffect(
   (actions$ = inject(Actions), gameCanvas = inject(GameCanvas), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.init, OverworldMapActions.setCurrentMap),

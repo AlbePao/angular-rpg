@@ -36,7 +36,7 @@ export class GameContainerComponent implements OnInit {
 
     // Start the game
     this._store.dispatch(
-      OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'Kitchen', cameraPersonId: 'hero' }),
+      OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'DemoRoom', cameraPersonId: 'hero' }),
     );
   }
 }

@@ -9,5 +9,5 @@ export interface AbstractGameObject {
   currentAnimationFrame: number;
   animationFrameLimit: number;
   animationFrameProgress: number;
-  currentFrameCoords: GameObjectFrameCoords;
+  isPlayerControlled: boolean;
 }

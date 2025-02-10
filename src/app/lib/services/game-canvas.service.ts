@@ -72,7 +72,7 @@ export class GameCanvas {
   }
 
   drawGameObject(gameObject: GameObject, cameraOffset: CameraOffset): void {
-    const { x, y, id, hasShadow, currentFrameCoords } = gameObject;
+    const { x, y, id, hasShadow, type, animations, currentAnimation, currentAnimationFrame } = gameObject;
     const { offsetX, offsetY } = cameraOffset;
     const gameObjectX = x - 8 + Utils.withGrid(BASE_CAMERA_OFFSET_X) - offsetX;
     const gameObjectY = y - 18 + Utils.withGrid(BASE_CAMERA_OFFSET_Y) - offsetY;
@@ -88,7 +88,8 @@ export class GameCanvas {
       this._gameCanvasContext.drawImage(shadowImage, gameObjectX, gameObjectY);
     }
 
-    const [frameX, frameY] = currentFrameCoords;
+    // TODO: abstract also for items, remove ternary operator
+    const [frameX, frameY] = type === 'person' ? animations[currentAnimation][currentAnimationFrame] : [1, 1];
 
     this._gameCanvasContext.drawImage(image, frameX * 32, frameY * 32, 32, 32, gameObjectX, gameObjectY, 32, 32);
   }

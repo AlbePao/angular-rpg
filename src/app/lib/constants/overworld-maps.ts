@@ -1,11 +1,13 @@
 import { OverWorldMaps } from '@lib/models/overworld-map';
 import { PERSON_ANIMATIONS, PERSON_DIRECTION_UPDATES } from './game-object-person';
-import { BASE_ANIMATION_FRAME_LIMIT, BASE_FRAME_COORDS } from './game-objects';
+import { BASE_ANIMATION_FRAME_LIMIT } from './game-objects';
+
+export const FALLBACK_MAP = 'DemoRoom';
 
 // TODO: implement zod validation when this object come from an external json
 export const OVERWORLD_MAPS: OverWorldMaps = {
-  DemoRoom: {
-    id: 'DemoRoom',
+  [FALLBACK_MAP]: {
+    id: FALLBACK_MAP,
     lowerSrc: '/images/maps/DemoLower.png',
     upperSrc: '/images/maps/DemoUpper.png',
     gameObjects: {
@@ -25,7 +27,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
         animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
-        currentFrameCoords: BASE_FRAME_COORDS,
       },
       npc1: {
         id: 'npc1',
@@ -43,9 +44,15 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
         animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
-        currentFrameCoords: BASE_FRAME_COORDS,
       },
     },
+    walls: {
+      '7,6': true,
+      '8,6': true,
+      '7,7': true,
+      '8,7': true,
+    },
+    gameObjectWalls: {},
   },
   Kitchen: {
     id: 'Kitchen',
@@ -68,7 +75,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
         animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
-        currentFrameCoords: BASE_FRAME_COORDS,
       },
       npcA: {
         id: 'npcA',
@@ -86,7 +92,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
         animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
-        currentFrameCoords: BASE_FRAME_COORDS,
       },
       npcB: {
         id: 'npcB',
@@ -104,8 +109,9 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
         animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
-        currentFrameCoords: BASE_FRAME_COORDS,
       },
     },
+    walls: {},
+    gameObjectWalls: {},
   },
 };

@@ -8,7 +8,7 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import { selectDirection } from '@store/direction-input/direction-input.selectors';
 import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
-import { selectOverworldMaps } from '@store/overworld-map/overworld-map.selectors';
+import { selectCurrentMapWalls, selectOverworldMaps } from '@store/overworld-map/overworld-map.selectors';
 import { map, tap } from 'rxjs';
 import { GameObjectsActions } from './game-objects.actions';
 import { selectGameObjects } from './game-objects.selectors';
@@ -16,9 +16,9 @@ import { selectGameObjects } from './game-objects.selectors';
 export const setGameObjects = createEffect(
   (actions$ = inject(Actions), gameCanvas = inject(GameCanvas), store = inject(Store)) => {
     return actions$.pipe(
-      ofType(OverworldMapActions.init, OverworldMapActions.setCurrentMap),
+      ofType(OverworldMapActions.init, OverworldMapActions.setCurrentMapById),
       concatLatestFrom(() => store.select(selectOverworldMaps)),
-      map(([{ currentMapId }, { maps }]) => {
+      map(([{ currentMapId }, maps]) => {
         const { gameObjects } = maps[currentMapId];
 
         return Object.keys(gameObjects).reduce<GameObjects>((prev, curr) => {
@@ -47,40 +47,60 @@ export const updatePosition = createEffect(
   (actions$ = inject(Actions), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.drawObjects),
-      concatLatestFrom(() => [store.select(selectGameObjects), store.select(selectDirection)]),
-      map(([, gameObjects, currentDirection]) => {
-        const updatedGameObjects: GameObjects = { ...gameObjects };
-
-        Object.keys(updatedGameObjects).forEach((key) => {
-          const gameObject = { ...updatedGameObjects[key] };
+      concatLatestFrom(() => [
+        store.select(selectGameObjects),
+        store.select(selectDirection),
+        store.select(selectCurrentMapWalls),
+      ]),
+      map(([, gameObjects, currentDirection, currentMapWalls]) => {
+        return Object.keys(gameObjects).reduce<GameObjects>((prev, currKey) => {
+          const gameObject = { ...gameObjects[currKey] };
 
           // TODO: extract following logic and concatenate it with sequential effects
           if (gameObject.type === 'person') {
             const {
+              x,
+              y,
               movingProgressRemaining,
               directionUpdate,
               direction,
               isPlayerControlled,
               currentAnimation,
               animationFrameLimit,
-              currentAnimationFrame,
-              animations,
             } = gameObject;
 
-            // Update position
             if (movingProgressRemaining > 0) {
+              // Update position
               const [axis, progression] = directionUpdate[direction];
               gameObject[axis] += progression;
               gameObject.movingProgressRemaining -= 1;
+
+              return { ...prev, [currKey]: gameObject };
+            }
+
+            // More cases for starting to walk will come here
+            //
+            //
+
+            // Case: We're keyboard ready and have an arrow pressed
+            if (isPlayerControlled && currentDirection) {
+              gameObject.direction = currentDirection;
+
+              const isSpaceTaken = Utils.isSpaceTaken(x, y, currentDirection, currentMapWalls);
+
+              // TODO: add if (behavior.type === 'walk')
+              if (!isSpaceTaken) {
+                gameObject.movingProgressRemaining = 16;
+              }
             }
 
             // Update sprite
             let key: PersonAnimations | null = null;
 
-            if (isPlayerControlled && movingProgressRemaining === 0 && !currentDirection) {
-              key = `idle-${direction}`;
-            } else if (movingProgressRemaining > 0) {
-              key = `walk-${direction}`;
+            if (gameObject.movingProgressRemaining > 0) {
+              key = `walk-${gameObject.direction}`;
+            } else {
+              key = `idle-${gameObject.direction}`;
             }
 
             if (key && currentAnimation !== key) {
@@ -88,21 +108,13 @@ export const updatePosition = createEffect(
               gameObject.currentAnimationFrame = 0;
               gameObject.animationFrameProgress = animationFrameLimit;
             }
-
-            gameObject.currentFrameCoords = animations[currentAnimation][currentAnimationFrame];
-
-            // Update game object data
-            if (isPlayerControlled && movingProgressRemaining === 0 && currentDirection) {
-              gameObject.direction = currentDirection;
-              gameObject.movingProgressRemaining = 16;
-            }
+            // End update sprite
           }
 
-          updatedGameObjects[key] = gameObject;
-        });
-
-        return GameObjectsActions.updateGameObjects({ gameObjects: updatedGameObjects });
+          return { ...prev, [currKey]: gameObject };
+        }, {});
       }),
+      map((gameObjects) => GameObjectsActions.updateGameObjects({ gameObjects })),
     );
   },
   { functional: true },
@@ -113,10 +125,8 @@ export const updateAnimationProgress = createEffect(
     return actions$.pipe(
       ofType(GameObjectsActions.updateGameObjects),
       map(({ gameObjects }) => {
-        const updatedGameObjects: GameObjects = { ...gameObjects };
-
-        Object.keys(updatedGameObjects).forEach((key) => {
-          const gameObject = { ...updatedGameObjects[key] };
+        return Object.keys(gameObjects).reduce<GameObjects>((prev, currKey) => {
+          const gameObject = { ...gameObjects[currKey] };
 
           if (gameObject.type === 'person') {
             const { animationFrameProgress, currentAnimation, animationFrameLimit, currentAnimationFrame, animations } =
@@ -139,11 +149,10 @@ export const updateAnimationProgress = createEffect(
             }
           }
 
-          updatedGameObjects[key] = gameObject;
-        });
-
-        return GameObjectsActions.updateAnimationProgress({ gameObjects: updatedGameObjects });
+          return { ...prev, [currKey]: gameObject };
+        }, {});
       }),
+      map((gameObjects) => GameObjectsActions.updateAnimationProgress({ gameObjects })),
     );
   },
   { functional: true },

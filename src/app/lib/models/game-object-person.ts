@@ -1,7 +1,6 @@
 import { AbstractGameObject, GameObjectFrameCoords } from './game-object-abstract';
 
 export interface GameObjectPerson extends AbstractGameObject {
-  isPlayerControlled: boolean;
   movingProgressRemaining: number;
   type: 'person';
   direction: PersonDirections;

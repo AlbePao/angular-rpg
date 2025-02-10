@@ -1,4 +1,4 @@
-import { OverWorldMaps } from '@lib/models/overworld-map';
+import { OverWorldMaps, OverworldMap } from '@lib/models/overworld-map';
 import { createReducer, on } from '@ngrx/store';
 import { OverworldMapActions } from './overworld-map.actions';
 
@@ -7,14 +7,14 @@ export const OverworldMapFeatureKey = 'OverworldMap';
 export interface OverworldMapFeatureState {
   isInitialized: boolean;
   maps: OverWorldMaps;
-  currentMapId: string;
+  currentMap: OverworldMap | null;
   cameraPersonId: string;
 }
 
 const initialState: OverworldMapFeatureState = {
   isInitialized: false,
   maps: {},
-  currentMapId: '',
+  currentMap: null,
   cameraPersonId: '',
 };
 
@@ -28,12 +28,19 @@ export const overworldMapReducer = createReducer(
   ),
   on(
     OverworldMapActions.init,
-    OverworldMapActions.setCurrentMap,
-    (state, { currentMapId }): OverworldMapFeatureState => ({ ...state, currentMapId }),
-  ),
-  on(
-    OverworldMapActions.init,
     OverworldMapActions.setCameraPerson,
     (state, { cameraPersonId }): OverworldMapFeatureState => ({ ...state, cameraPersonId }),
   ),
+  on(
+    OverworldMapActions.setCurrentMap,
+    (state, { currentMap }): OverworldMapFeatureState => ({ ...state, currentMap }),
+  ),
+  on(OverworldMapActions.updateGameObjectWalls, (state, { gameObjectWalls }): OverworldMapFeatureState => {
+    const { currentMap } = state;
+
+    return {
+      ...state,
+      ...(currentMap && { currentMap: { ...currentMap, gameObjectWalls } }),
+    };
+  }),
 );

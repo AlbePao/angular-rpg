@@ -11,9 +11,12 @@ export interface GameObject {
   animationFrameLimit: number;
   animationFrameProgress: number;
   isPlayerControlled: boolean;
+  direction: GameObjectDirections;
   animations: GameObjectAnimationsMap;
   currentAnimation: string;
 }
+
+export type GameObjectDirections = 'up' | 'left' | 'down' | 'right';
 
 export type GameObjectAnimationsMap = Record<string, GameObjectFrameCoords[]>;
 

@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { inject } from '@angular/core';
-import { PersonDirections } from '@lib/models/game-object-person';
+import { GameObjectDirections } from '@lib/models/game-object';
 import { createEffect } from '@ngrx/effects';
 import { fromEvent, map } from 'rxjs';
 import { DirectionInputActions } from './direction-input.actions';
@@ -8,7 +8,7 @@ import { DirectionInputActions } from './direction-input.actions';
 const INPUT_KEYS = ['ArrowUp', 'KeyW', 'ArrowDown', 'KeyS', 'ArrowLeft', 'KeyA', 'ArrowRight', 'KeyD'] as const;
 type InputKeys = (typeof INPUT_KEYS)[number];
 
-type DirectionInputMap = Record<InputKeys, PersonDirections>;
+type DirectionInputMap = Record<InputKeys, GameObjectDirections>;
 
 const DIRECTION_INPUT_MAP: DirectionInputMap = {
   ArrowUp: 'up',

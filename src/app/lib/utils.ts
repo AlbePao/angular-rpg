@@ -1,7 +1,7 @@
 import { BASE_GRID_SIZE } from '@lib/constants/game-objects';
-import { GameObject, GameObjectCoords } from './models/game-object';
+import { GameObject, GameObjectCoords, GameObjectDirections } from './models/game-object';
 import { GameObjectItem } from './models/game-object-item';
-import { GameObjectPerson, PersonDirections } from './models/game-object-person';
+import { GameObjectPerson } from './models/game-object-person';
 import { OverworldMapWalls } from './models/overworld-map';
 
 export class Utils {
@@ -9,7 +9,7 @@ export class Utils {
     return value * BASE_GRID_SIZE;
   }
 
-  static nextPosition(initialX: number, initialY: number, direction: PersonDirections): GameObjectCoords {
+  static nextPosition(initialX: number, initialY: number, direction: GameObjectDirections): GameObjectCoords {
     let x = initialX;
     let y = initialY;
 
@@ -29,7 +29,7 @@ export class Utils {
   static isSpaceTaken(
     initialX: number,
     initialY: number,
-    direction: PersonDirections,
+    direction: GameObjectDirections,
     walls: OverworldMapWalls,
   ): boolean {
     const { x, y } = this.nextPosition(initialX, initialY, direction);

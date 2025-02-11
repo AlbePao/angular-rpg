@@ -1,6 +1,7 @@
 import { BASE_GRID_SIZE } from '@lib/constants/game-objects';
-import { GameObjectCoords } from './models/game-object';
-import { PersonDirections } from './models/game-object-person';
+import { GameObject, GameObjectCoords } from './models/game-object';
+import { GameObjectItem } from './models/game-object-item';
+import { GameObjectPerson, PersonDirections } from './models/game-object-person';
 import { OverworldMapWalls } from './models/overworld-map';
 
 export class Utils {
@@ -34,5 +35,13 @@ export class Utils {
     const { x, y } = this.nextPosition(initialX, initialY, direction);
 
     return walls[`${x},${y}`] || false;
+  }
+
+  static isGameObjectPerson(gameObject: GameObject): gameObject is GameObjectPerson {
+    return gameObject.type === 'person';
+  }
+
+  static isGameObjectItem(gameObject: GameObject): gameObject is GameObjectItem {
+    return gameObject.type === 'item';
   }
 }

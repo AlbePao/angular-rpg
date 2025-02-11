@@ -1,11 +1,13 @@
-import { AbstractGameObject } from './game-object-abstract';
+import { GameObject, GameObjectFrameCoords } from './game-object';
 
-export interface GameObjectItem extends AbstractGameObject {
+export interface GameObjectItem extends GameObject {
   type: 'item';
-  animations: unknown;
+  animations: ItemAnimationsMap;
   currentAnimation: ItemAnimations;
 }
 
 export type ItemAnimations = 'usedDown' | 'unusedDown';
+
+export type ItemAnimationsMap = Record<ItemAnimations, GameObjectFrameCoords[]>;
 
 export type ItemGameObjects = Record<string, GameObjectItem>;

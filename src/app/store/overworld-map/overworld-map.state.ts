@@ -7,7 +7,7 @@ export const OverworldMapFeatureKey = 'OverworldMap';
 export interface OverworldMapFeatureState {
   isInitialized: boolean;
   maps: OverWorldMaps;
-  currentMap: OverworldMap | null;
+  currentMap: OverworldMap | null; // Whole map is saved into currentMap state to keep its local state and delete it on map change
   cameraPersonId: string;
 }
 

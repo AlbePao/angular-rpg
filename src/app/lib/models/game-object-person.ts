@@ -1,6 +1,6 @@
-import { AbstractGameObject, GameObjectFrameCoords } from './game-object-abstract';
+import { GameObject, GameObjectFrameCoords } from './game-object';
 
-export interface GameObjectPerson extends AbstractGameObject {
+export interface GameObjectPerson extends GameObject {
   movingProgressRemaining: number;
   type: 'person';
   direction: PersonDirections;

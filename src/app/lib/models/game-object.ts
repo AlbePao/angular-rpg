@@ -1,9 +1,22 @@
-import { AbstractGameObject } from './game-object-abstract';
-import { GameObjectItem } from './game-object-item';
-import { GameObjectPerson } from './game-object-person';
+export type GameObjectFrameCoords = [number, number];
 
-export type GameObjectCoords = Pick<AbstractGameObject, 'x' | 'y'>;
+export interface GameObject {
+  type: string;
+  id: string;
+  x: number;
+  y: number;
+  src: string;
+  hasShadow: boolean;
+  currentAnimationFrame: number;
+  animationFrameLimit: number;
+  animationFrameProgress: number;
+  isPlayerControlled: boolean;
+  animations: GameObjectAnimationsMap;
+  currentAnimation: string;
+}
 
-export type GameObject = GameObjectPerson | GameObjectItem;
+export type GameObjectAnimationsMap = Record<string, GameObjectFrameCoords[]>;
+
+export type GameObjectCoords = Pick<GameObject, 'x' | 'y'>;
 
 export type GameObjects = Record<string, GameObject>;

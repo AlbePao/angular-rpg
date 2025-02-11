@@ -57,7 +57,7 @@ export const updatePosition = createEffect(
           const gameObject = { ...gameObjects[currKey] };
 
           // TODO: extract following logic and concatenate it with sequential effects
-          if (gameObject.type === 'person') {
+          if (Utils.isGameObjectPerson(gameObject)) {
             const {
               x,
               y,
@@ -127,25 +127,22 @@ export const updateAnimationProgress = createEffect(
       map(({ gameObjects }) => {
         return Object.keys(gameObjects).reduce<GameObjects>((prev, currKey) => {
           const gameObject = { ...gameObjects[currKey] };
+          const { animationFrameProgress, currentAnimation, animationFrameLimit, currentAnimationFrame, animations } =
+            gameObject;
 
-          if (gameObject.type === 'person') {
-            const { animationFrameProgress, currentAnimation, animationFrameLimit, currentAnimationFrame, animations } =
-              gameObject;
+          // Downtick frame progress
+          if (animationFrameProgress > 0) {
+            gameObject.animationFrameProgress -= 1;
+          } else {
+            // Reset the counter
+            gameObject.animationFrameProgress = animationFrameLimit;
 
-            // Downtick frame progress
-            if (animationFrameProgress > 0) {
-              gameObject.animationFrameProgress -= 1;
+            const nextAnimation = animations[currentAnimation][currentAnimationFrame + 1];
+
+            if (nextAnimation) {
+              gameObject.currentAnimationFrame += 1;
             } else {
-              // Reset the counter
-              gameObject.animationFrameProgress = animationFrameLimit;
-
-              const nextAnimation = animations[currentAnimation][currentAnimationFrame + 1];
-
-              if (nextAnimation) {
-                gameObject.currentAnimationFrame += 1;
-              } else {
-                gameObject.currentAnimationFrame = 0;
-              }
+              gameObject.currentAnimationFrame = 0;
             }
           }
 

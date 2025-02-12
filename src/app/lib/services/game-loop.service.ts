@@ -1,23 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { WINDOW } from '@lib/tokens/window';
-import { expand, filter, map, Observable, of, share } from 'rxjs';
+import { expand, filter, interval, Observable, of, share, throttle } from 'rxjs';
 
 interface FrameData {
   frameStartTime: number;
   deltaTime: number;
 }
-
-// TODO: improve clamping with distinctUntilChanged
-const clampTo30FPS = (frame: FrameData | null) => {
-  if (!frame) {
-    return frame;
-  }
-
-  if (frame.deltaTime > 1 / 30) {
-    frame.deltaTime = 1 / 30;
-  }
-  return frame;
-};
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +23,7 @@ export class GameLoop {
           deltaTime,
         });
       });
-    }).pipe(map((frame) => clampTo30FPS(frame)));
+    });
   }
 
   getCurrentFrame() {
@@ -43,8 +31,9 @@ export class GameLoop {
       expand((val) => this._calculateStep(val)),
       // Expand emits the first value provided to it, and in this
       // case we just want to ignore the null input frame
-      filter((frame) => frame !== null),
-      map((frame: FrameData) => frame.deltaTime),
+      filter((frame): frame is FrameData => frame !== null),
+      // Limit emission to 60 fps (1000ms / 60fps = 16.66, rounded to 10)
+      throttle(() => interval(10)),
       share(),
     );
   }

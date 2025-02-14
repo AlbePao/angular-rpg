@@ -1,6 +1,5 @@
 import { OverWorldMaps } from '@lib/models/overworld-map';
 import { PERSON_ANIMATIONS, PERSON_DIRECTION_UPDATES } from './game-object-person';
-import { BASE_ANIMATION_FRAME_LIMIT } from './game-objects';
 
 export const FALLBACK_MAP = 'DemoRoom';
 
@@ -25,7 +24,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         animations: PERSON_ANIMATIONS,
         currentAnimation: 'idle-down',
         currentAnimationFrame: 0,
-        animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
       },
       npc1: {
@@ -42,7 +40,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         animations: PERSON_ANIMATIONS,
         currentAnimation: 'idle-down',
         currentAnimationFrame: 0,
-        animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
       },
     },
@@ -73,7 +70,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         animations: PERSON_ANIMATIONS,
         currentAnimation: 'idle-down',
         currentAnimationFrame: 0,
-        animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
       },
       npcA: {
@@ -90,7 +86,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         animations: PERSON_ANIMATIONS,
         currentAnimation: 'idle-down',
         currentAnimationFrame: 0,
-        animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
       },
       npcB: {
@@ -107,7 +102,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         animations: PERSON_ANIMATIONS,
         currentAnimation: 'idle-down',
         currentAnimationFrame: 0,
-        animationFrameLimit: BASE_ANIMATION_FRAME_LIMIT,
         animationFrameProgress: 0,
       },
     },

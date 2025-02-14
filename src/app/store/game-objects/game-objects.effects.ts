@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { BASE_ANIMATION_FRAME_LIMIT } from '@lib/constants/game-objects';
 import { GameObjects } from '@lib/models/game-object';
 import { PersonAnimations } from '@lib/models/game-object-person';
 import { GameCanvas } from '@lib/services/game-canvas.service';
@@ -66,7 +67,6 @@ export const updatePosition = createEffect(
               direction,
               isPlayerControlled,
               currentAnimation,
-              animationFrameLimit,
             } = gameObject;
 
             if (movingProgressRemaining > 0) {
@@ -106,7 +106,7 @@ export const updatePosition = createEffect(
             if (key && currentAnimation !== key) {
               gameObject.currentAnimation = key;
               gameObject.currentAnimationFrame = 0;
-              gameObject.animationFrameProgress = animationFrameLimit;
+              gameObject.animationFrameProgress = BASE_ANIMATION_FRAME_LIMIT;
             }
             // End update sprite
           }
@@ -127,15 +127,14 @@ export const updateAnimationProgress = createEffect(
       map(({ gameObjects }) => {
         return Object.keys(gameObjects).reduce<GameObjects>((prev, currKey) => {
           const gameObject = { ...gameObjects[currKey] };
-          const { animationFrameProgress, currentAnimation, animationFrameLimit, currentAnimationFrame, animations } =
-            gameObject;
+          const { animationFrameProgress, currentAnimation, currentAnimationFrame, animations } = gameObject;
 
           // Downtick frame progress
           if (animationFrameProgress > 0) {
             gameObject.animationFrameProgress -= 1;
           } else {
             // Reset the counter
-            gameObject.animationFrameProgress = animationFrameLimit;
+            gameObject.animationFrameProgress = BASE_ANIMATION_FRAME_LIMIT;
 
             const nextAnimation = animations[currentAnimation][currentAnimationFrame + 1];
 

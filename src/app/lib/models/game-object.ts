@@ -8,7 +8,6 @@ export interface GameObject {
   src: string;
   hasShadow: boolean;
   currentAnimationFrame: number;
-  animationFrameLimit: number;
   animationFrameProgress: number;
   isPlayerControlled: boolean;
   direction: GameObjectDirections;

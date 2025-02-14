@@ -8,10 +8,10 @@ export const PERSON_DIRECTION_UPDATES: PersonDirectionUpdates = {
 };
 
 export const PERSON_ANIMATIONS: PersonAnimationsMap = {
-  'idle-down': [[0, 0]],
-  'idle-right': [[0, 1]],
-  'idle-up': [[0, 2]],
-  'idle-left': [[0, 3]],
+  'stand-down': [[0, 0]],
+  'stand-right': [[0, 1]],
+  'stand-up': [[0, 2]],
+  'stand-left': [[0, 3]],
   'walk-down': [
     [1, 0],
     [0, 0],

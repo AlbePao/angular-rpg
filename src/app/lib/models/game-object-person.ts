@@ -1,4 +1,4 @@
-import { GameObject, GameObjectDirections, GameObjectFrameCoords } from './game-object';
+import { GameObject, GameObjectBehaviorsTypes, GameObjectDirections, GameObjectFrameCoords } from './game-object';
 
 export interface GameObjectPerson extends GameObject {
   movingProgressRemaining: number;
@@ -8,7 +8,7 @@ export interface GameObjectPerson extends GameObject {
   currentAnimation: PersonAnimations;
 }
 
-export type PersonAnimations = `idle-${GameObjectDirections}` | `walk-${GameObjectDirections}`;
+export type PersonAnimations = `${GameObjectBehaviorsTypes}-${GameObjectDirections}`;
 
 export type PersonAnimationsMap = Record<PersonAnimations, GameObjectFrameCoords[]>;
 

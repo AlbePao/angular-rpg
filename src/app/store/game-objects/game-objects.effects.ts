@@ -100,7 +100,7 @@ export const updatePosition = createEffect(
             if (gameObject.movingProgressRemaining > 0) {
               key = `walk-${gameObject.direction}`;
             } else {
-              key = `idle-${gameObject.direction}`;
+              key = `stand-${gameObject.direction}`;
             }
 
             if (key && currentAnimation !== key) {

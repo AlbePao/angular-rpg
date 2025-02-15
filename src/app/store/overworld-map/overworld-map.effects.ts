@@ -71,7 +71,7 @@ export const setCurrentMap = createEffect(
 export const updateGameObjectWalls = createEffect(
   (actions$ = inject(Actions)) => {
     return actions$.pipe(
-      ofType(GameObjectsActions.updateGameObjects),
+      ofType(GameObjectsActions.updatePositions),
       map(({ gameObjects }) => {
         // Game object walls are constantly overwritten by game loop, so thats why we need to store it inside another property in overworld map state
         const gameObjectWalls = Object.keys(gameObjects).reduce<OverworldMapWalls>((prev, curr) => {

@@ -26,8 +26,8 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
         currentAnimationFrame: 0,
         animationFrameProgress: 0,
       },
-      npc1: {
-        id: 'npc1',
+      npcA: {
+        id: 'npcA',
         x: 7,
         y: 9,
         type: 'person',

@@ -44,7 +44,7 @@ export const setGameObjects = createEffect(
   { functional: true },
 );
 
-export const updatePosition = createEffect(
+export const updatePositions = createEffect(
   (actions$ = inject(Actions), store = inject(Store)) => {
     return actions$.pipe(
       ofType(OverworldMapActions.drawObjects),
@@ -78,12 +78,9 @@ export const updatePosition = createEffect(
               return { ...prev, [currKey]: gameObject };
             }
 
-            // More cases for starting to walk will come here
-            //
-            //
-
-            // Case: We're keyboard ready and have an arrow pressed
+            // We're keyboard ready and have an arrow pressed
             if (isPlayerControlled && currentDirection) {
+
               gameObject.direction = currentDirection;
 
               const isSpaceTaken = Utils.isSpaceTaken(x, y, currentDirection, currentMapWalls);
@@ -114,16 +111,16 @@ export const updatePosition = createEffect(
           return { ...prev, [currKey]: gameObject };
         }, {});
       }),
-      map((gameObjects) => GameObjectsActions.updateGameObjects({ gameObjects })),
+      map((gameObjects) => GameObjectsActions.updatePositions({ gameObjects })),
     );
   },
   { functional: true },
 );
 
-export const updateAnimationProgress = createEffect(
+export const updateAnimationsProgress = createEffect(
   (actions$ = inject(Actions)) => {
     return actions$.pipe(
-      ofType(GameObjectsActions.updateGameObjects),
+      ofType(GameObjectsActions.updatePositions),
       map(({ gameObjects }) => {
         return Object.keys(gameObjects).reduce<GameObjects>((prev, currKey) => {
           const gameObject = { ...gameObjects[currKey] };
@@ -148,7 +145,7 @@ export const updateAnimationProgress = createEffect(
           return { ...prev, [currKey]: gameObject };
         }, {});
       }),
-      map((gameObjects) => GameObjectsActions.updateAnimationProgress({ gameObjects })),
+      map((gameObjects) => GameObjectsActions.updateAnimationsProgress({ gameObjects })),
     );
   },
   { functional: true },

@@ -12,8 +12,8 @@ export const gameObjectsReducer = createReducer(
   initialState,
   on(
     GameObjectsActions.setGameObjects,
-    GameObjectsActions.updateGameObjects,
-    GameObjectsActions.updateAnimationProgress,
+    GameObjectsActions.updatePositions,
+    GameObjectsActions.updateAnimationsProgress,
     (state, { gameObjects }): GameObjectsFeatureState => ({ ...state, ...gameObjects }),
   ),
 );

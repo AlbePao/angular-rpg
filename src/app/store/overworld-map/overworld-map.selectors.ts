@@ -26,3 +26,5 @@ export const selectCurrentMapWalls = createSelector(selectCurrentMap, (currentMa
 
   return { ...walls, ...gameObjectWalls };
 });
+
+export const selectCurrentDeltaTime = createSelector(selectOverworldMapState, ({ deltaTime }) => deltaTime);

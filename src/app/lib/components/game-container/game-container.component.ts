@@ -30,8 +30,8 @@ export class GameContainerComponent implements OnInit {
     this._gameContainer.setGameContainer(this.gameContainer()?.nativeElement);
     this._gameCanvas.setGameCanvas(this.gameCanvas()?.nativeElement);
 
-    this._gameLoop.getCurrentFrame().subscribe(() => {
-      this._store.dispatch(OverworldMapActions.drawObjects());
+    this._gameLoop.getCurrentFrame().subscribe(({ deltaTime }) => {
+      this._store.dispatch(OverworldMapActions.drawObjects({ deltaTime }));
     });
 
     // Start the game

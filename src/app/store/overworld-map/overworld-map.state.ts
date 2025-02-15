@@ -6,6 +6,7 @@ export const OverworldMapFeatureKey = 'OverworldMap';
 
 export interface OverworldMapFeatureState {
   isInitialized: boolean;
+  deltaTime: number;
   maps: OverWorldMaps;
   currentMap: OverworldMap | null; // Whole map is saved into currentMap state to keep its local state and delete it on map change
   cameraPersonId: string;
@@ -13,6 +14,7 @@ export interface OverworldMapFeatureState {
 
 const initialState: OverworldMapFeatureState = {
   isInitialized: false,
+  deltaTime: 0,
   maps: {},
   currentMap: null,
   cameraPersonId: '',
@@ -21,6 +23,7 @@ const initialState: OverworldMapFeatureState = {
 export const overworldMapReducer = createReducer(
   initialState,
   on(OverworldMapActions.init, (state): OverworldMapFeatureState => ({ ...state, isInitialized: true })),
+  on(OverworldMapActions.drawObjects, (state, { deltaTime }): OverworldMapFeatureState => ({ ...state, deltaTime })),
   on(
     OverworldMapActions.init,
     OverworldMapActions.setOverworldMaps,

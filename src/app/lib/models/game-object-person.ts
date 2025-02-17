@@ -3,7 +3,6 @@ import { GameObject, GameObjectBehaviorsTypes, GameObjectDirections, GameObjectF
 export interface GameObjectPerson extends GameObject {
   movingProgressRemaining: number;
   type: 'person';
-  directionUpdate: PersonDirectionUpdates;
   animations: PersonAnimationsMap;
   currentAnimation: PersonAnimations;
 }

@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { PERSON_DIRECTION_UPDATES } from '@lib/constants/game-object-person';
 import { BASE_ANIMATION_FRAME_LIMIT } from '@lib/constants/game-objects';
 import { GameObjects } from '@lib/models/game-object';
 import { PersonAnimations } from '@lib/models/game-object-person';
@@ -63,7 +64,6 @@ export const updatePositions = createEffect(
               x,
               y,
               movingProgressRemaining,
-              directionUpdate,
               direction,
               isPlayerControlled,
               currentAnimation,
@@ -71,7 +71,7 @@ export const updatePositions = createEffect(
 
             if (movingProgressRemaining > 0) {
               // Update position
-              const [axis, progression] = directionUpdate[direction];
+              const [axis, progression] = PERSON_DIRECTION_UPDATES[direction];
               gameObject[axis] += progression;
               gameObject.movingProgressRemaining -= 1;
 

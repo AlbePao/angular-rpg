@@ -10,7 +10,11 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import { selectDirection } from '@store/direction-input/direction-input.selectors';
 import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions';
-import { selectCurrentMapWalls, selectOverworldMaps } from '@store/overworld-map/overworld-map.selectors';
+import {
+  selectCurrentMapWalls,
+  selectIsCutscenePlaying,
+  selectOverworldMaps,
+} from '@store/overworld-map/overworld-map.selectors';
 import { map, tap } from 'rxjs';
 import { GameObjectsActions } from './game-objects.actions';
 import { selectGameObjects } from './game-objects.selectors';
@@ -53,17 +57,19 @@ export const updatePositions = createEffect(
         store.select(selectGameObjects),
         store.select(selectDirection),
         store.select(selectCurrentMapWalls),
+        store.select(selectIsCutscenePlaying),
       ]),
-      map(([, gameObjects, currentDirection, currentMapWalls]) => {
+      map(([{ deltaTime }, gameObjects, currentDirection, currentMapWalls, isCutscenePlaying]) => {
         return Object.keys(gameObjects).reduce<GameObjects>((prev, currKey) => {
           const gameObject = { ...gameObjects[currKey] };
 
-          // TODO: extract following logic and concatenate it with sequential effects
           if (Utils.isGameObjectPerson(gameObject)) {
             const {
               x,
               y,
               movingProgressRemaining,
+              behaviorLoop,
+              behaviorLoopIndex,
               direction,
               isPlayerControlled,
               currentAnimation,
@@ -79,16 +85,78 @@ export const updatePositions = createEffect(
             }
 
             // We're keyboard ready and have an arrow pressed
-            if (isPlayerControlled && currentDirection) {
-
+            if (!isCutscenePlaying && isPlayerControlled && currentDirection) {
               gameObject.direction = currentDirection;
 
               const isSpaceTaken = Utils.isSpaceTaken(x, y, currentDirection, currentMapWalls);
 
-              // TODO: add if (behavior.type === 'walk')
               if (!isSpaceTaken) {
                 gameObject.movingProgressRemaining = 16;
               }
+            }
+
+            // If person has a behavior loop, use it
+            if (behaviorLoop.length > 0) {
+              // Get current behavior
+              const currentBehavior = behaviorLoop[behaviorLoopIndex];
+
+              // Increase elapsed behavior time
+              gameObject.currentBehaviorTimeElapsed += deltaTime;
+
+              if (currentBehavior.type === 'walk') {
+                const { direction } = currentBehavior;
+
+                if (gameObject.movingProgressRemaining > 0) {
+                  // Update position
+                  const [axis, progression] = PERSON_DIRECTION_UPDATES[direction];
+                  gameObject[axis] += progression;
+                  gameObject.movingProgressRemaining -= 1;
+
+                  return { ...prev, [currKey]: gameObject };
+                }
+
+                const isSpaceTaken = Utils.isSpaceTaken(x, y, direction, currentMapWalls);
+
+                if (!isSpaceTaken) {
+                  gameObject.movingProgressRemaining = 16;
+                  // Behavior time is over, so we change change behavior and reset the timer
+                  gameObject.behaviorLoopIndex += 1;
+
+                  // If we reach the end of behaviors list, behavior loop index is reset
+                  if (gameObject.behaviorLoopIndex === behaviorLoop.length) {
+                    gameObject.behaviorLoopIndex = 0;
+                  }
+
+                  // Get next behavior
+                  gameObject.direction = direction;
+                  gameObject.currentAnimation = `walk-${direction}`;
+                  gameObject.currentBehaviorTimeElapsed = 0;
+                } else {
+                  gameObject.currentAnimation = `stand-${direction}`;
+                }
+              }
+
+              if (currentBehavior.type === 'stand') {
+                const { direction, time } = currentBehavior;
+
+                if (gameObject.currentBehaviorTimeElapsed > time) {
+                  // Behavior time is over, so we change change behavior and reset the timer
+                  gameObject.behaviorLoopIndex += 1;
+
+                  // If we reach the end of behaviors list, behavior loop index is reset
+                  if (gameObject.behaviorLoopIndex === behaviorLoop.length) {
+                    gameObject.behaviorLoopIndex = 0;
+                  }
+
+                  gameObject.direction = direction;
+                  gameObject.currentAnimation = `stand-${direction}`;
+                  gameObject.currentBehaviorTimeElapsed = 0;
+                } else {
+                  gameObject.currentAnimation = `stand-${direction}`;
+                }
+              }
+
+              return { ...prev, [currKey]: gameObject };
             }
 
             // Update sprite

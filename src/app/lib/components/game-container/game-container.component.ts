@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import { OVERWORLD_MAPS } from '@lib/constants/overworld-maps';
 import { GameCanvas } from '@lib/services/game-canvas.service';
 import { GameContainer } from '@lib/services/game-container.service';
@@ -17,7 +25,7 @@ import { OverworldMapActions } from '@store/overworld-map/overworld-map.actions'
   styleUrl: './game-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameContainerComponent implements OnInit {
+export class GameContainerComponent implements OnInit, AfterViewInit {
   private readonly _gameContainer = inject(GameContainer);
   private readonly _gameCanvas = inject(GameCanvas);
   private readonly _gameLoop = inject(GameLoop);
@@ -38,5 +46,20 @@ export class GameContainerComponent implements OnInit {
     this._store.dispatch(
       OverworldMapActions.init({ maps: OVERWORLD_MAPS, currentMapId: 'DemoRoom', cameraPersonId: 'hero' }),
     );
+  }
+
+  ngAfterViewInit(): void {
+    // Start the cutscene
+    // this._store.dispatch(
+    //   OverworldMapActions.startCutscene({
+    //     cutscene: [
+    //       { who: 'hero', type: 'walk', direction: 'down' },
+    //       { who: 'hero', type: 'walk', direction: 'down' },
+    //       { who: 'npcA', type: 'walk', direction: 'left' },
+    //       { who: 'npcA', type: 'walk', direction: 'left' },
+    //       { who: 'npcA', type: 'stand', direction: 'up', time: 800 },
+    //     ],
+    //   }),
+    // );
   }
 }

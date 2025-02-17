@@ -10,6 +10,7 @@ export interface OverworldMapFeatureState {
   maps: OverWorldMaps;
   currentMap: OverworldMap | null; // Whole map is saved into currentMap state to keep its local state and delete it on map change
   cameraPersonId: string;
+  isCutscenePlaying: boolean;
 }
 
 const initialState: OverworldMapFeatureState = {
@@ -18,6 +19,7 @@ const initialState: OverworldMapFeatureState = {
   maps: {},
   currentMap: null,
   cameraPersonId: '',
+  isCutscenePlaying: false,
 };
 
 export const overworldMapReducer = createReducer(
@@ -37,5 +39,10 @@ export const overworldMapReducer = createReducer(
   on(
     OverworldMapActions.setCurrentMap,
     (state, { currentMap }): OverworldMapFeatureState => ({ ...state, currentMap }),
+  ),
+  on(OverworldMapActions.startCutscene, (state): OverworldMapFeatureState => ({ ...state, isCutscenePlaying: true })),
+  on(
+    OverworldMapActions.setIsCutscenePlaying,
+    (state, { isCutscenePlaying }): OverworldMapFeatureState => ({ ...state, isCutscenePlaying }),
   ),
 );

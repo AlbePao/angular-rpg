@@ -1,4 +1,4 @@
-import { GameObjects } from './game-object';
+import { GameObjectBehaviors, GameObjects } from './game-object';
 import { ItemGameObjects } from './game-object-item';
 import { PersonGameObjects } from './game-object-person';
 
@@ -17,3 +17,7 @@ export interface OverworldMap {
 }
 
 export type OverWorldMaps = Record<string, OverworldMap>;
+
+export type OverworldCutscene = {
+  who: string;
+} & GameObjectBehaviors;

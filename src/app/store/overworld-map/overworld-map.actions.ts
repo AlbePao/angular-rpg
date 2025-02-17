@@ -1,4 +1,4 @@
-import { OverworldMap, OverWorldMaps, OverworldMapWalls } from '@lib/models/overworld-map';
+import { OverworldCutscene, OverworldMap, OverWorldMaps } from '@lib/models/overworld-map';
 import { createActionGroup, props } from '@ngrx/store';
 
 export const OverworldMapActions = createActionGroup({
@@ -10,6 +10,7 @@ export const OverworldMapActions = createActionGroup({
     setCurrentMap: props<{ currentMap: OverworldMap }>(),
     setCurrentMapById: props<{ currentMapId: string }>(),
     setCameraPerson: props<{ cameraPersonId: string }>(),
-    updateGameObjectWalls: props<{ gameObjectWalls: OverworldMapWalls }>(),
+    setIsCutscenePlaying: props<{ isCutscenePlaying: boolean }>(),
+    startCutscene: props<{ cutscene: OverworldCutscene[] }>(),
   },
 });

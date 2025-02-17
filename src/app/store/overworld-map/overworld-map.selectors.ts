@@ -38,5 +38,9 @@ export const selectCurrentMapWalls = createSelector(
   },
 );
 
+export const selectIsCutscenePlaying = createSelector(
+  selectOverworldMapState,
+  ({ isCutscenePlaying }) => isCutscenePlaying,
+);
 
 export const selectCurrentDeltaTime = createSelector(selectOverworldMapState, ({ deltaTime }) => deltaTime);

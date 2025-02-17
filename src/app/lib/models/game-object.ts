@@ -13,7 +13,23 @@ export interface GameObject {
   direction: GameObjectDirections;
   animations: GameObjectAnimationsMap;
   currentAnimation: string;
+  behaviorLoop: GameObjectBehaviors[];
+  behaviorLoopIndex: number;
+  currentBehaviorTimeElapsed: number;
 }
+
+export type GameObjectBehaviorTypes = 'walk' | 'stand';
+
+export type GameObjectBehaviors =
+  | {
+      type: Extract<GameObjectBehaviorTypes, 'walk'>;
+      direction: GameObjectDirections;
+    }
+  | {
+      type: Extract<GameObjectBehaviorTypes, 'stand'>;
+      direction: GameObjectDirections;
+      time: number;
+    };
 
 export type GameObjectDirections = 'up' | 'left' | 'down' | 'right';
 

@@ -38,12 +38,4 @@ export const overworldMapReducer = createReducer(
     OverworldMapActions.setCurrentMap,
     (state, { currentMap }): OverworldMapFeatureState => ({ ...state, currentMap }),
   ),
-  on(OverworldMapActions.updateGameObjectWalls, (state, { gameObjectWalls }): OverworldMapFeatureState => {
-    const { currentMap } = state;
-
-    return {
-      ...state,
-      ...(currentMap && { currentMap: { ...currentMap, gameObjectWalls } }),
-    };
-  }),
 );

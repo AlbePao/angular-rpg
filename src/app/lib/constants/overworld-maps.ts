@@ -49,7 +49,6 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
       '7,7': true,
       '8,7': true,
     },
-    gameObjectWalls: {},
   },
   Kitchen: {
     id: 'Kitchen',
@@ -106,6 +105,5 @@ export const OVERWORLD_MAPS: OverWorldMaps = {
       },
     },
     walls: {},
-    gameObjectWalls: {},
   },
 };

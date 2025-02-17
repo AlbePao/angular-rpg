@@ -17,14 +17,26 @@ export const selectCameraPersonId = createSelector(selectOverworldMapState, ({ c
 
 export const selectCurrentMap = createSelector(selectOverworldMapState, ({ currentMap }) => currentMap);
 
-export const selectCurrentMapWalls = createSelector(selectCurrentMap, (currentMap): OverworldMapWalls => {
-  if (!currentMap) {
-    return {};
-  }
+export const selectCurrentMapWalls = createSelector(
+  selectCurrentMap,
+  selectGameObjects,
+  (currentMap, gameObjects): OverworldMapWalls => {
+    if (!currentMap) {
+      return {};
+    }
 
-  const { walls, gameObjectWalls } = currentMap;
+    // const { walls, gameObjectWalls } = currentMap;
 
-  return { ...walls, ...gameObjectWalls };
-});
+    const { walls } = currentMap;
+
+    const gameObjectWalls = Object.keys(gameObjects).reduce<OverworldMapWalls>((prev, currKey) => {
+      const { x, y } = { ...gameObjects[currKey] };
+      return { ...prev, [`${x},${y}`]: true };
+    }, {});
+
+    return { ...walls, ...gameObjectWalls };
+  },
+);
+
 
 export const selectCurrentDeltaTime = createSelector(selectOverworldMapState, ({ deltaTime }) => deltaTime);

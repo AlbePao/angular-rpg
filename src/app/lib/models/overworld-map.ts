@@ -14,7 +14,6 @@ export interface OverworldMap {
   upperSrc: string;
   gameObjects: OverworldMapGameObjects;
   walls: OverworldMapWalls;
-  gameObjectWalls: OverworldMapWalls; // Game objects walls are stored in another property because they are continuously overwritten at runtime
 }
 
 export type OverWorldMaps = Record<string, OverworldMap>;

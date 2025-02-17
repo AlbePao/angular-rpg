@@ -1,13 +1,12 @@
 import { inject } from '@angular/core';
-import { BASE_GRID_SIZE } from '@lib/constants/game-objects';
 import { FALLBACK_MAP } from '@lib/constants/overworld-maps';
 import { CameraOffset } from '@lib/models/camera-offset';
 import { OverworldMapWalls } from '@lib/models/overworld-map';
 import { GameCanvas } from '@lib/services/game-canvas.service';
+import { Utils } from '@lib/utils';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
-import { GameObjectsActions } from '@store/game-objects/game-objects.actions';
 import { selectGameObjects } from '@store/game-objects/game-objects.selectors';
 import { map, tap } from 'rxjs';
 import { OverworldMapActions } from './overworld-map.actions';
@@ -30,7 +29,9 @@ export const drawObjects = createEffect(
         gameCanvas.drawLowerMapLayer(cameraOffset);
 
         // Draw game objects
-        Object.keys(gameObjects).forEach((key) => gameCanvas.drawGameObject(gameObjects[key], cameraOffset));
+        Object.keys(gameObjects)
+          .sort((a, b) => gameObjects[a].y - gameObjects[b].y)
+          .forEach((key) => gameCanvas.drawGameObject(gameObjects[key], cameraOffset));
 
         // Draw upper layer
         gameCanvas.drawUpperMapLayer(cameraOffset);
@@ -53,7 +54,7 @@ export const setCurrentMap = createEffect(
         // Map walls with grid size coordinates
         const walls = Object.keys(currentMap.walls).reduce<OverworldMapWalls>((prev, curr) => {
           const [x, y] = curr.split(',').map((coord) => parseInt(coord));
-          const updatedCoords = `${x * BASE_GRID_SIZE},${y * BASE_GRID_SIZE}`;
+          const updatedCoords = `${Utils.withGrid(x)},${Utils.withGrid(y)}`;
           return { ...prev, [updatedCoords]: true };
         }, {});
 
@@ -62,27 +63,6 @@ export const setCurrentMap = createEffect(
       // Set the lower and upper map images
       tap(({ lowerSrc, upperSrc }) => gameCanvas.setMapImage({ lowerSrc, upperSrc })),
       map((currentMap) => OverworldMapActions.setCurrentMap({ currentMap })),
-    );
-  },
-  { functional: true },
-);
-
-// Update game objects walls inside the map
-export const updateGameObjectWalls = createEffect(
-  (actions$ = inject(Actions)) => {
-    return actions$.pipe(
-      ofType(GameObjectsActions.updatePositions),
-      map(({ gameObjects }) => {
-        // Game object walls are constantly overwritten by game loop, so thats why we need to store it inside another property in overworld map state
-        const gameObjectWalls = Object.keys(gameObjects).reduce<OverworldMapWalls>((prev, curr) => {
-          const currentGameObject = gameObjects[curr];
-          const { x, y } = currentGameObject;
-
-          return { ...prev, [`${x},${y}`]: true };
-        }, {});
-
-        return OverworldMapActions.updateGameObjectWalls({ gameObjectWalls });
-      }),
     );
   },
   { functional: true },
